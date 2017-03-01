@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "normal": { "model": "treespirit:core" },
+    "axis=y":  { "model": "treespirit:core" },
+    "axis=z":   { "model": "treespirit:core", "x": 90 },
+    "axis=x":   { "model": "treespirit:core", "x": 90, "y": 90 },
+    "axis=none": { "model": "treespirit:core" }
+  }
+}

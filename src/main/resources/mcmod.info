@@ -1,0 +1,16 @@
+[
+{
+  "modid": "treespirit",
+  "name": "Tree Spirit",
+  "description": "Become a tree spirit and guard a tree with intertwined fates.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/rolandoislas/tree-spirit",
+  "updateUrl": "",
+  "authorList": ["rolandoislas"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

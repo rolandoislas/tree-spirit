@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "treespirit:blocks/log_top",
+    "side": "treespirit:blocks/log"
+  }
+}

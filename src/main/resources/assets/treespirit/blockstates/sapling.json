@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "sapling=normal,stage=0": { "model": "treespirit:sapling_normal" },
+    "sapling=normal,stage=1": { "model": "treespirit:sapling_normal" },
+    "sapling=elder,stage=0": { "model": "treespirit:sapling_elder" },
+    "sapling=elder,stage=1": { "model": "treespirit:sapling_elder" }
+  }
+}
