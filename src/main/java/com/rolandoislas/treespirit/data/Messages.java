@@ -12,4 +12,11 @@ public class Messages {
 	public static final String PLAYER_DIED = "death.attack.tree_spirit";
 	public static final String CORE_REGISTERED = PREFIX + "core_registered";
 	public static final String CHUNK_LOAD_ERROR = PREFIX + "chunk_load_error";
+	public static final String DIMENSION_SAPLING_PLACED = PREFIX + "dimension_sapling_placed";
+	public static final String DIMENSION_CORE_REGISTERED = PREFIX + "dimension_core_registered";
+	public static final String DIMENSION_CORE_PLACE_FAILED = PREFIX + "dimension_core_place_failed";
+	public static final String CORE_PLACE_FAILED = PREFIX + "core_place_failed";
+	public static final String NO_CORE = PREFIX + "no_core";
+	public static final String MOB_ATTACKING_CORE = PREFIX + "mob_attacking_core";
+	public static String NORMAL_SAPLING_PLANT_FAIL = PREFIX + "normal_sapling_plant_fail";
 }

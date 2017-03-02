@@ -1,10 +1,13 @@
 package com.rolandoislas.treespirit.registry;
 
 import com.rolandoislas.treespirit.block.EnumWood;
-import com.rolandoislas.treespirit.data.EnumSubItem;
+import com.rolandoislas.treespirit.data.SubItem;
+import com.rolandoislas.treespirit.gui.renderer.ModItemColors;
 import com.rolandoislas.treespirit.item.ItemDevTool;
 import com.rolandoislas.treespirit.item.ItemEssence;
+import com.rolandoislas.treespirit.item.ItemLifeExtender;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -26,13 +29,16 @@ public class ModItems {
 	public static final Item PLANK = createItemBlock(ModBlocks.PLANK);
 	public static final Item SAPLING = createItemBlockWithSubtypes(ModBlocks.SAPLING, EnumWood.class,
 			EnumWood.NORMAL.name());
-	public static final Item CORE = createItemBlock(ModBlocks.CORE);
+	public static final Item CORE = createItemBlockWithSubtypes(ModBlocks.CORE, EnumWood.class,
+			EnumWood.NORMAL.name());
+	public static final Item GRASS = createItemBlock(ModBlocks.GRASS);
+	public static final Item LIFE_EXTENDER = new ItemLifeExtender();
 
 	private static Item createItemBlockWithSubtypes(Block block, final Class<? extends Enum> enumClass,
 													final String defaultEnumInstanceName) {
 		Item item = new ItemMultiTexture(block, block, new ItemMultiTexture.Mapper() {
 			public String apply(ItemStack itemStack) {
-				return ((EnumSubItem)Enum.valueOf(enumClass, defaultEnumInstanceName))
+				return ((SubItem)Enum.valueOf(enumClass, defaultEnumInstanceName))
 						.getFromMeta(itemStack.getMetadata()).getUnlocalizedName();
 			}
 		}).setUnlocalizedName(block.getUnlocalizedName())
@@ -54,6 +60,8 @@ public class ModItems {
 		registerTexture(PLANK);
 		registerTexture(SAPLING);
 		registerTexture(CORE);
+		registerTexture(GRASS);
+		registerTexture(LIFE_EXTENDER);
 	}
 
 	private static void registerTexture(Item item) {
@@ -79,5 +87,11 @@ public class ModItems {
 		GameRegistry.register(PLANK);
 		GameRegistry.register(SAPLING);
 		GameRegistry.register(CORE);
+		GameRegistry.register(GRASS);
+		GameRegistry.register(LIFE_EXTENDER);
+	}
+
+	public static void registerColors() {
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ModItemColors(), GRASS);
 	}
 }

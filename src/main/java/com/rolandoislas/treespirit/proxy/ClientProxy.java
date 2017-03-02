@@ -1,6 +1,7 @@
 package com.rolandoislas.treespirit.proxy;
 
 import com.rolandoislas.treespirit.event.EventHandlerClient;
+import com.rolandoislas.treespirit.registry.ModBlocks;
 import com.rolandoislas.treespirit.registry.ModItems;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -21,6 +22,8 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
+		ModBlocks.registerColors();
+		ModItems.registerColors();
 	}
 
 	@Override

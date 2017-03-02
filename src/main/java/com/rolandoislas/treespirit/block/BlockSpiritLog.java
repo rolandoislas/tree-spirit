@@ -41,16 +41,23 @@ public class BlockSpiritLog extends BlockRotatedPillar {
 
 	@Override
 	public void observedNeighborChange(IBlockState observerState, World world, BlockPos observerPos, Block changedBlock, BlockPos changedBlockPos) {
-		checkDestroy(world, observerPos);
+		if (Config.neighborChangeLog)
+			checkDestroy(world, observerPos, observerState, false);
 	}
 
-	private boolean checkDestroy(World world, BlockPos pos) {
+	private boolean checkDestroy(World world, BlockPos pos, IBlockState state, boolean dropBlock) {
 		if (world.isRemote)
 			return false;
-		if (!WorldUtil.hasBlockNearby(pos, world, 1, 1, 1,
-				Integer.MAX_VALUE, ModBlocks.CORE) &&
-				!WorldUtil.hasBlockNearby(pos, world, 1, 10, 1, 0,
-						ModBlocks.CORE)) {
+		if (
+				// Can block be sustained by radius of core
+				!WorldUtil.hasBlockNearby(pos, world, 1, 1, 1,
+						Integer.MAX_VALUE, ModBlocks.CORE) &&
+				// Can tree be sustained by core or grass
+				!WorldUtil.hasBlockNearby(pos, world, 0, 10, 0, 0,
+						ModBlocks.CORE, ModBlocks.GRASS)
+				) {
+			if (dropBlock)
+				this.dropBlockAsItem(world, pos, state, 0);
 			world.setBlockToAir(pos);
 			return true;
 		}
@@ -61,17 +68,12 @@ public class BlockSpiritLog extends BlockRotatedPillar {
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		if (worldIn.isRemote)
 			return;
-		if (checkDestroy(worldIn, pos)) {
-			if (placer instanceof EntityPlayer) {
-				((EntityPlayer) placer).inventory.
-						addItemStackToInventory(new ItemStack(stack.getItem(), 1, stack.getMetadata()));
-				((EntityPlayer) placer).inventory.markDirty();
-			}
-		}
+		checkDestroy(worldIn, pos, state,
+				placer instanceof EntityPlayer && !((EntityPlayer) placer).isCreative());
 	}
 
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
-		checkDestroy(worldIn, pos);
+		checkDestroy(worldIn, pos, state, false);
 	}
 }

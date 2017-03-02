@@ -4,6 +4,8 @@ import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.data.Config;
 import com.rolandoislas.treespirit.event.ChunkLoadingCallback;
 import com.rolandoislas.treespirit.event.EventHandlerCommon;
+import com.rolandoislas.treespirit.network.MessageCoreCountdown;
+import com.rolandoislas.treespirit.network.MessageHandlerCoreCountdown;
 import com.rolandoislas.treespirit.registry.*;
 import com.rolandoislas.treespirit.util.JsonUtil;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -11,6 +13,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 
@@ -28,13 +32,17 @@ public class CommonProxy {
 	}
 
 	public void init(FMLInitializationEvent event) {
-
-	}
-
-	public void postInit(FMLPostInitializationEvent event) {
 		ModOreDictionary.register();
 		Recipes.register();
 		TileEntities.register();
 		ForgeChunkManager.setForcedChunkLoadingCallback(TreeSpirit.instance, new ChunkLoadingCallback());
+		TreeSpirit.networkChannel = NetworkRegistry.INSTANCE.newSimpleChannel(TreeSpirit.MODID + "y");
+		TreeSpirit.networkChannel.registerMessage(MessageHandlerCoreCountdown.class,
+				MessageCoreCountdown.class, 0, Side.CLIENT);
+
+	}
+
+	public void postInit(FMLPostInitializationEvent event) {
+
 	}
 }

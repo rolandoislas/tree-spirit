@@ -1,15 +1,16 @@
 package com.rolandoislas.treespirit.block;
 
-import com.rolandoislas.treespirit.data.EnumSubItem;
+import com.rolandoislas.treespirit.data.SubItem;
 import net.minecraft.util.IStringSerializable;
 
 /**
  * Created by Rolando on 2/27/2017.
  */
 
-public enum EnumWood implements IStringSerializable, EnumSubItem {
+public enum EnumWood implements IStringSerializable, SubItem {
 	NORMAL(0),
-	ELDER(1);
+	ELDER(1),
+	DIMENSION(2);
 
 	private final int meta;
 

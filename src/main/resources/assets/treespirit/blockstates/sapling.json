@@ -1,8 +1,10 @@
 {
   "variants": {
-    "sapling=normal,stage=0": { "model": "treespirit:sapling_normal" },
-    "sapling=normal,stage=1": { "model": "treespirit:sapling_normal" },
-    "sapling=elder,stage=0": { "model": "treespirit:sapling_elder" },
-    "sapling=elder,stage=1": { "model": "treespirit:sapling_elder" }
+    "stage=0,type=normal": { "model": "treespirit:sapling_normal" },
+    "stage=1,type=normal": { "model": "treespirit:sapling_normal" },
+    "stage=0,type=elder": { "model": "treespirit:sapling_elder" },
+    "stage=1,type=elder": { "model": "treespirit:sapling_elder" },
+    "stage=0,type=dimension": { "model": "treespirit:sapling_dimension" },
+    "stage=1,type=dimension": { "model": "treespirit:sapling_dimension" }
   }
 }

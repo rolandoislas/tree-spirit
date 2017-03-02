@@ -1,13 +1,11 @@
 package com.rolandoislas.treespirit.block;
 
 import com.rolandoislas.treespirit.TreeSpirit;
+import com.rolandoislas.treespirit.data.Config;
 import com.rolandoislas.treespirit.data.Messages;
-import com.rolandoislas.treespirit.data.spirit.SpiritCore;
-import com.rolandoislas.treespirit.data.spirit.SpiritSapling;
 import com.rolandoislas.treespirit.registry.ModBlocks;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
 import com.rolandoislas.treespirit.util.InfoUtil;
-import com.rolandoislas.treespirit.util.JsonUtil;
 import com.rolandoislas.treespirit.util.SpiritUtil;
 import com.rolandoislas.treespirit.util.WorldUtil;
 import net.minecraft.block.*;
@@ -24,7 +22,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
 
 import java.util.Random;
 
@@ -33,7 +33,7 @@ import java.util.Random;
  */
 public class BlockSpiritSapling extends BlockBush implements IGrowable {
 	private static final PropertyInteger STAGE = PropertyInteger.create("stage", 0, 1);
-	private static final PropertyEnum<EnumWood> TYPE = PropertyEnum.create("sapling", EnumWood.class);
+	static final PropertyEnum<EnumWood> TYPE = PropertyEnum.create("type", EnumWood.class);
 
 	public BlockSpiritSapling() {
 		super();
@@ -95,6 +95,11 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 			this.generateTree(worldIn, pos, state, rand);
 	}
 
+	@Override
+	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable) {
+		return false;
+	}
+
 	private void generateTree(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		if (worldIn.isRemote)
 			return;
@@ -118,19 +123,31 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 		for (int leafIndex = 1; leafIndex <= leafHeight; leafIndex++)
 			WorldUtil.setBlocksAroundPos(pos.up(height - leafIndex), worldIn, 2, 0, 2, leafState,
 					false, true, (leafIndex == 1 || leafIndex == leafHeight) ? 5 : 0);
-		// Spawn the elder core
-		boolean isElder = state.getBlock().getMetaFromState(state) == EnumWood.ELDER.getMeta();
-		SpiritSapling sapling =
-				JsonUtil.getSpiritData().getWorld(InfoUtil.getWorldId(worldIn)).getSapling(worldIn, pos);
-		SpiritCore core = JsonUtil.getSpiritData().getWorld(InfoUtil.getWorldId(worldIn))
-				.getCore(sapling.getPlayerId());
-		if (isElder && core.getDimension() == null) {
-			SpiritUtil.registerCore(worldIn, pos);
-			worldIn.setBlockState(pos, ModBlocks.CORE.getDefaultState()
-					.withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
+		// Spawn the core
+		String owner = SpiritUtil.getOwnerId(worldIn, pos);
+		EnumWood type = EnumWood.NORMAL.getFromMeta(getMetaFromState(state));
+		boolean canSpawnAdditionalDimensionCores = true;
+		if (Config.oneDimensionCorePerWorld)
+			canSpawnAdditionalDimensionCores = !SpiritUtil.playerHasDimensionCoreInCurrentDimension(worldIn, owner);
+		switch (type) {
+			case ELDER:
+				if (!owner.isEmpty() && !SpiritUtil.playerHasCore(worldIn, owner)) {
+					SpiritUtil.registerCore(worldIn, pos);
+					worldIn.setBlockState(pos, ModBlocks.CORE.getDefaultState()
+							.withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
+				}
+				break;
+			case DIMENSION:
+				if (!owner.isEmpty() && SpiritUtil.playerHasCore(worldIn, owner) && canSpawnAdditionalDimensionCores) {
+					SpiritUtil.registerDimensionCore(worldIn, pos);
+					worldIn.setBlockState(pos, ModBlocks.CORE.getDefaultState()
+							.withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y)
+							.withProperty(TYPE, EnumWood.DIMENSION));
+				}
+				break;
 		}
-		// Normal
-		else
+		// Normal block
+		if (worldIn.getBlockState(pos).getBlock() == ModBlocks.SAPLING)
 			worldIn.setBlockState(pos, ModBlocks.LOG.getDefaultState()
 					.withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
 	}
@@ -151,9 +168,46 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 			return;
 		if (!(placer instanceof EntityPlayer))
 			return;
-		if (EnumWood.NORMAL.getFromMeta(getMetaFromState(state)) == EnumWood.ELDER) {
-			SpiritUtil.registerSapling(worldIn, pos, (EntityPlayer) placer);
-			SpiritUtil.sendMessage((EntityPlayer) placer, Messages.ELDER_SAPLING_PLACED, placer.getDisplayName());
+		String owner = InfoUtil.getPlayerUuid((EntityPlayer) placer);
+		boolean hasCore = SpiritUtil.playerHasCore(worldIn, owner);
+		boolean canSpawnAdditionalDimensionCores = true;
+		if (Config.oneDimensionCorePerWorld)
+			canSpawnAdditionalDimensionCores = !SpiritUtil.playerHasDimensionCoreInCurrentDimension(worldIn, owner);
+		switch (EnumWood.NORMAL.getFromMeta(getMetaFromState(state))) {
+			case ELDER:
+				if (!hasCore) {
+					SpiritUtil.registerSapling(worldIn, pos, (EntityPlayer) placer);
+					SpiritUtil.sendMessage((EntityPlayer) placer, Messages.ELDER_SAPLING_PLACED,
+							placer.getDisplayName());
+				}
+				else
+					SpiritUtil.sendMessage((EntityPlayer) placer,
+							Messages.CORE_PLACE_FAILED, placer.getDisplayName());
+				break;
+			case DIMENSION:
+				if (hasCore) {
+					if (canSpawnAdditionalDimensionCores) {
+						SpiritUtil.registerSapling(worldIn, pos, (EntityPlayer) placer);
+						SpiritUtil.sendMessage((EntityPlayer) placer,
+								Messages.DIMENSION_SAPLING_PLACED, placer.getDisplayName());
+					}
+					else
+						SpiritUtil.sendMessage((EntityPlayer) placer,
+								Messages.DIMENSION_CORE_PLACE_FAILED, placer.getDisplayName());
+				}
+				else
+					SpiritUtil.sendMessage((EntityPlayer) placer,
+							Messages.NO_CORE, placer.getDisplayName());
+				break;
+			case NORMAL:
+				if (worldIn.getBlockState(pos.down()).getBlock() != ModBlocks.GRASS &&
+						worldIn.getBlockState(pos.down()).getBlock() != ModBlocks.CORE) {
+					this.dropBlockAsItem(worldIn, pos, state, 0);
+					worldIn.setBlockToAir(pos);
+					SpiritUtil.sendMessage((EntityPlayer) placer,
+							Messages.NORMAL_SAPLING_PLANT_FAIL, placer.getDisplayName());
+				}
+				break;
 		}
 	}
 
@@ -162,7 +216,11 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 		super.breakBlock(worldIn, pos, state);
 		if (worldIn.isRemote)
 			return;
-		if (EnumWood.NORMAL.getFromMeta(getMetaFromState(state)) == EnumWood.ELDER)
-			SpiritUtil.removeSapling(worldIn, pos);
+		switch (EnumWood.NORMAL.getFromMeta(getMetaFromState(state))) {
+			case ELDER:
+			case DIMENSION:
+				SpiritUtil.removeSapling(worldIn, pos);
+				break;
+		}
 	}
 }

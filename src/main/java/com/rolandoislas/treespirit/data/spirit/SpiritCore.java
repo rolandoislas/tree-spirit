@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class SpiritCore {
 	final Integer dimension;
 	final int[] pos;
-	private final String playerUid;
+	final String playerUid;
 
 	public SpiritCore(World worldIn, BlockPos pos, String playerUuid) {
 		this.dimension = worldIn != null ? worldIn.provider.getDimension() : null;
@@ -30,15 +30,7 @@ public class SpiritCore {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof SpiritCore))
-			return false;
-		if (!playerUid.isEmpty() && playerUid.equals(((SpiritCore) obj).playerUid))
-			return true;
-		if (dimension != null && pos != null &&
-				dimension.equals(((SpiritCore) obj).dimension) &&
-				Arrays.equals(pos, ((SpiritCore) obj).pos))
-			return true;
-		return false;
+		return equals(this, obj, true);
 	}
 
 	public String getPlayerId() {
@@ -54,5 +46,27 @@ public class SpiritCore {
 		if (pos == null)
 			return null;
 		return new BlockPos(pos[0], pos[1], pos[2]);
+	}
+
+	/**
+	 * Check if objects match
+	 * @param core core instance
+	 * @param obj object to check against
+	 * @param checkId should check id
+	 *                If the id is not check equality will be determined by the dimension and position
+	 * @return matches
+	 */
+	public static boolean equals(SpiritCore core, Object obj, boolean checkId) {
+		if (!(obj instanceof SpiritCore))
+			return false;
+		// Check id matches (first)
+		if (checkId && !core.playerUid.isEmpty() && core.playerUid.equals(((SpiritCore) obj).playerUid))
+			return true;
+		// Check dimension and position match
+		if (core.dimension != null && core.pos != null &&
+				core.dimension.equals(((SpiritCore) obj).dimension) &&
+				Arrays.equals(core.pos, ((SpiritCore) obj).pos))
+			return true;
+		return false;
 	}
 }

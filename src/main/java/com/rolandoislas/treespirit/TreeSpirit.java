@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = TreeSpirit.MODID, version = TreeSpirit.VERSION, name = TreeSpirit.NAME,
@@ -21,6 +22,7 @@ public class TreeSpirit {
             serverSide = "com.rolandoislas.treespirit.proxy.CommonProxy")
     public static CommonProxy proxy;
     public static Logger logger;
+    public static SimpleNetworkWrapper networkChannel;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {

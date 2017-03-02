@@ -1,13 +1,17 @@
 package com.rolandoislas.treespirit.util;
 
-import mcp.MethodsReturnNonnullByDefault;
+import com.rolandoislas.treespirit.TreeSpirit;
+import com.rolandoislas.treespirit.data.Messages;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeChunkManager;
 
 import java.util.ArrayList;
 
@@ -103,7 +107,6 @@ public class WorldUtil {
 		return blockPositions;
 	}
 
-	@MethodsReturnNonnullByDefault
 	public static EntityPlayer getPlayer(String playerId) {
 		if (playerId.isEmpty())
 			return null;
@@ -112,6 +115,67 @@ public class WorldUtil {
 			for (EntityPlayer player : world.playerEntities)
 				if (EntityPlayer.getUUID(player.getGameProfile()).toString().equals(playerId))
 					return player;
+		return null;
+	}
+
+	/**
+	 * Gets a world with the specified dimension and tries to force load at teh specified block
+	 * @param fallback world to use for forced chunk loading
+	 * @param pos position of block that needs chunk loaded
+	 * @param dimension dimension of the world
+	 * @return world wih hopefully a loaded chunk
+	 */
+	public static World getWorldWithLoadedChunk(World fallback, BlockPos pos , int dimension) {
+		World world = DimensionManager.getWorld(dimension);
+		if (world == null) {
+			world = fallback;
+			world.provider.setDimension(dimension);
+			ForgeChunkManager.Ticket ticket =
+					ForgeChunkManager.requestTicket(TreeSpirit.instance, fallback, ForgeChunkManager.Type.NORMAL);
+			if (ticket == null) {
+				TreeSpirit.logger.info(I18n.format(Messages.CHUNK_LOAD_ERROR));
+				return fallback;
+			}
+			TreeSpirit.logger.info(I18n.format(Messages.CHUNK_LOAD_ERROR));
+			ForgeChunkManager.forceChunk(ticket, new ChunkPos(pos));
+			ForgeChunkManager.releaseTicket(ticket);
+		}
+		return world;
+	}
+
+	public static boolean hasBlocksNearbyViaChain(BlockPos position, World world, int radiusX, int radiusY, int radiusZ,
+												  int checkDepth, Block chain, Block... blocks) {
+		ArrayList<int[]> around = getBlocksPositionsAroundPos(position, radiusX, radiusY, radiusZ, false);
+		for (int[] pos : around) {
+			BlockPos blockPos = new BlockPos(pos[0], pos[1], pos[2]);
+			Block block = world.getBlockState(blockPos).getBlock();
+			for (Block checkBlock : blocks)
+				if (checkBlock == block)
+					return true;
+			if (block == chain &&
+					hasBlockNearby(blockPos, world, 1, 1, 1, checkDepth, blocks))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Search for a block within the radius - includes origin
+	 * @param pos origin
+	 * @param world world
+	 * @param radiusX how far x
+	 * @param radiusY how far y
+	 * @param radiusZ how far z
+	 * @param block block type to match
+	 * @return position or null
+	 */
+	public static BlockPos getBlockNearby(BlockPos pos, World world, int radiusX, int radiusY, int radiusZ, Block block) {
+		ArrayList<int[]> blockPositions = getBlocksPositionsAroundPos(pos, radiusX, radiusY, radiusZ, true);
+		for (int[] blockPos : blockPositions) {
+			BlockPos checkBlockPos = new BlockPos(blockPos[0], blockPos[1], blockPos[2]);
+			if (world.getBlockState(checkBlockPos).getBlock() == block)
+				return checkBlockPos;
+		}
 		return null;
 	}
 }

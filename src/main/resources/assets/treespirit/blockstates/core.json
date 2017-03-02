@@ -1,9 +1,17 @@
 {
   "variants": {
     "normal": { "model": "treespirit:core" },
-    "axis=y":  { "model": "treespirit:core" },
-    "axis=z":   { "model": "treespirit:core", "x": 90 },
-    "axis=x":   { "model": "treespirit:core", "x": 90, "y": 90 },
-    "axis=none": { "model": "treespirit:core" }
+    "axis=y,type=normal":  { "model": "treespirit:core_normal" },
+    "axis=z,type=normal":   { "model": "treespirit:core_normal", "x": 90 },
+    "axis=x,type=normal":   { "model": "treespirit:core_normal", "x": 90, "y": 90 },
+    "axis=none,type=normal": { "model": "treespirit:core_normal" },
+    "axis=y,type=elder":  { "model": "treespirit:core_elder" },
+    "axis=z,type=elder":   { "model": "treespirit:core_elder", "x": 90 },
+    "axis=x,type=elder":   { "model": "treespirit:core_elder", "x": 90, "y": 90 },
+    "axis=none,type=elder": { "model": "treespirit:core_elder" },
+    "axis=y,type=dimension":  { "model": "treespirit:core_dimension" },
+    "axis=z,type=dimension":   { "model": "treespirit:core_dimension", "x": 90 },
+    "axis=x,type=dimension":   { "model": "treespirit:core_dimension", "x": 90, "y": 90 },
+    "axis=none,type=dimension": { "model": "treespirit:core_dimension" }
   }
 }

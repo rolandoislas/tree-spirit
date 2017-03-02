@@ -9,6 +9,7 @@ import com.rolandoislas.treespirit.registry.ModBlocks;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
 import com.rolandoislas.treespirit.util.InfoUtil;
 import com.rolandoislas.treespirit.util.JsonUtil;
+import com.rolandoislas.treespirit.util.SpiritUtil;
 import com.rolandoislas.treespirit.util.WorldUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -33,21 +34,18 @@ public class ItemDevTool extends Item {
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (worldIn.isRemote)
 			return EnumActionResult.FAIL;
-		SpiritData spiritData = JsonUtil.getSpiritData();
-		SpiritWorldData worldData = spiritData.getWorld(InfoUtil.getWorldId(worldIn));
-		String playerId = "";
-		if (worldIn.getBlockState(pos).getBlock() == ModBlocks.SAPLING) {
-			SpiritSapling sapling = worldData.getSapling(worldIn, pos);
-			playerId = sapling.getPlayerId();
+		String playerId = SpiritUtil.getOwnerId(worldIn, pos);
+		String ownerName;
+		if (!playerId.isEmpty()) {
+			EntityPlayer owner = WorldUtil.getPlayer(playerId);
+			if (owner != null)
+				ownerName = owner.getDisplayNameString();
+			else
+				ownerName = "<owner offline>";
 		}
-		if (worldIn.getBlockState(pos).getBlock() == ModBlocks.CORE) {
-			SpiritCore core = worldData.getCore(worldIn, pos);
-			playerId = core.getPlayerId();
-		}
-		EntityPlayer owner = WorldUtil.getPlayer(playerId);
-		if (owner == null)
-			return EnumActionResult.FAIL;
-		player.sendMessage(new TextComponentString("Owner: " + owner.getDisplayNameString()));
+		else
+			ownerName = "<no owner>";
+		player.sendMessage(new TextComponentString("Owner: " + ownerName));
 		return EnumActionResult.SUCCESS;
 	}
 }

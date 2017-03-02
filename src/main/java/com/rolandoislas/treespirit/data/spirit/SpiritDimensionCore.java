@@ -5,15 +5,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * Created by Rolando on 2/28/2017.
+ * Created by Rolando on 3/2/2017.
  */
-public class SpiritSapling extends SpiritCore {
-	SpiritSapling(World worldIn, BlockPos pos, String playerUuid) {
-		super(worldIn, pos, playerUuid);
+public class SpiritDimensionCore extends SpiritCore {
+	public SpiritDimensionCore(World worldIn, BlockPos pos) {
+		super(worldIn, pos);
 	}
 
-	SpiritSapling(World worldIn, BlockPos pos) {
-		super(worldIn, pos);
+	public SpiritDimensionCore(World worldIn, BlockPos pos, String playerUuid) {
+		super(worldIn, pos, playerUuid);
 	}
 
 	@Override

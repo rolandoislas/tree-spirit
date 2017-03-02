@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "snowy=false": { "model": "treespirit:grass" },
+    "snowy=true": { "model": "treespirit:grass" }
+  }
+}
