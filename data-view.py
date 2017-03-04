@@ -26,10 +26,12 @@ def display_file():
         dimension_cores = world["dimensionCores"]
         death_timers = world["deathTimers"]
         players = world["players"]
+        room_sealers = world["roomSealers"]
         print("Saplings:", len(saplings), " ")
         print("Cores:", len(cores), " ")
         print("Dimension Cores", len(dimension_cores), " ")
         print("Death Timers:", len(death_timers), " ")
+        print("Room Sealers:", len(room_sealers), " ")
         print("Players:", len(players), "\n", " ")
         for sapling in saplings:
             print_info("Sapling:", sapling)

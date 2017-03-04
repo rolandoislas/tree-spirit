@@ -19,6 +19,7 @@ public class ModOreDictionary {
 		registerItem(ModItems.LEAF, "treeLeaves");
 		registerItem(ModItems.ESSENCE, "essence");
 		registerItem(ModItems.LIFE_EXTENDER, "utility");
+		registerItem(ModItems.ROOM_SEALER, "utility");
 	}
 
 	private static void registerItem(Item itemIn, String name) {

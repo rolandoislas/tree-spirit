@@ -36,9 +36,9 @@ public class BlockSpiritGrass extends BlockGrass {
 		int x = pos.getX() - 1;
 		int y = pos.getY() - 1;
 		int z = pos.getZ() - 1;
-		x += rand.nextInt(2);
-		y += rand.nextInt(2);
-		z += rand.nextInt(2);
+		x += rand.nextInt(3);
+		y += rand.nextInt(3);
+		z += rand.nextInt(3);
 		BlockPos spreadPos = new BlockPos(x, y, z);
 		Block spreadBlock = worldIn.getBlockState(spreadPos).getBlock();
 		if (spreadBlock == Blocks.DIRT && !worldIn.getBlockState(spreadPos.up()).isNormalCube())

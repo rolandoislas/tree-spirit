@@ -87,4 +87,8 @@ public class DeathTimer {
 	public long getTime() {
 		return time;
 	}
+
+	public void update(int amount) {
+		time += amount;
+	}
 }

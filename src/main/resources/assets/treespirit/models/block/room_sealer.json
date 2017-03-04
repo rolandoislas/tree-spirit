@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "treespirit:blocks/room_sealer"
+  }
+}

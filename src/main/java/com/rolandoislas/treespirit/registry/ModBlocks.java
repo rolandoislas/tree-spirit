@@ -16,6 +16,7 @@ public class ModBlocks {
 	public static final Block LEAF = new BlockSpiritLeaf();
 	public static final Block PLANK = new BlockSpiritPlank();
 	public static final Block CORE = new BlockSpiritCore();
+	public static final Block ROOM_SEALER = new BlockRoomSealer();
 
 	public static void register() {
 		GameRegistry.register(SAPLING);
@@ -24,6 +25,7 @@ public class ModBlocks {
 		GameRegistry.register(PLANK);
 		GameRegistry.register(CORE);
 		GameRegistry.register(GRASS);
+		GameRegistry.register(ROOM_SEALER);
 	}
 
 	public static void registerColors() {

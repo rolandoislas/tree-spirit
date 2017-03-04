@@ -33,6 +33,7 @@ public class ModItems {
 			EnumWood.NORMAL.name());
 	public static final Item GRASS = createItemBlock(ModBlocks.GRASS);
 	public static final Item LIFE_EXTENDER = new ItemLifeExtender();
+	public static final Item ROOM_SEALER = createItemBlock(ModBlocks.ROOM_SEALER).setMaxStackSize(1);
 
 	private static Item createItemBlockWithSubtypes(Block block, final Class<? extends Enum> enumClass,
 													final String defaultEnumInstanceName) {
@@ -62,6 +63,7 @@ public class ModItems {
 		registerTexture(CORE);
 		registerTexture(GRASS);
 		registerTexture(LIFE_EXTENDER);
+		registerTexture(ROOM_SEALER);
 	}
 
 	private static void registerTexture(Item item) {
@@ -89,6 +91,7 @@ public class ModItems {
 		GameRegistry.register(CORE);
 		GameRegistry.register(GRASS);
 		GameRegistry.register(LIFE_EXTENDER);
+		GameRegistry.register(ROOM_SEALER);
 	}
 
 	public static void registerColors() {

@@ -18,5 +18,7 @@ public class Messages {
 	public static final String CORE_PLACE_FAILED = PREFIX + "core_place_failed";
 	public static final String NO_CORE = PREFIX + "no_core";
 	public static final String MOB_ATTACKING_CORE = PREFIX + "mob_attacking_core";
+	public static final String ROOM_SEALER_PASS = PREFIX + "room_sealer_pass";
+	public static final String ROOM_SEALER_FAIL = PREFIX + "room_sealer_fail";
 	public static String NORMAL_SAPLING_PLANT_FAIL = PREFIX + "normal_sapling_plant_fail";
 }

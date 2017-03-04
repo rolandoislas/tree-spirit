@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -168,6 +169,10 @@ public class SpiritUtil {
 	public static void tickEvent(TickEvent.PlayerTickEvent event) {
 		if (event.side.equals(Side.CLIENT) || event.player.world.isRemote)
 			return;
+		// Slow the tick check down to once per second
+		if (event.player.ticksExisted % 20 != 0)
+			return;
+		// Death check
 		SpiritData spiritData = JsonUtil.getSpiritData();
 		SpiritWorldData spiritWorldData = spiritData.getWorld(InfoUtil.getWorldId(event.player.world));
 		String playerUuid = InfoUtil.getPlayerUuid(event.player);
@@ -182,21 +187,17 @@ public class SpiritUtil {
 			deathTimer = new DeathTimer(playerUuid);
 			deathTimers.add(deathTimer);
 		}
-		//deathTimer.update();
-		if (!WorldUtil.hasBlocksNearbyViaChain(event.player.getPosition(), event.player.world, 1, 1, 1,
-				Integer.MAX_VALUE, ModBlocks.LOG, ModBlocks.CORE) &&
-				!WorldUtil.hasBlocksNearbyViaChain(event.player.getPosition().up(), event.player.world, 1, 1, 1,
-						Integer.MAX_VALUE, ModBlocks.LOG, ModBlocks.CORE)) {
+		if (!isInRangeOfCore(event.player) && !isInSealedRoom(event.player) && canKillPlayerType(event.player)) {
 			// Damage life extender instead of updating player death counter
 			ItemStack offHandItem = event.player.inventory.offHandInventory.get(0);
 			if (offHandItem.getItem() == ModItems.LIFE_EXTENDER &&
 					offHandItem.getItemDamage() < offHandItem.getMaxDamage()) {
-				offHandItem.getItem().setDamage(offHandItem, offHandItem.getItemDamage() + 1);
+				offHandItem.getItem().setDamage(offHandItem, offHandItem.getItemDamage() + 20);
 				if (deathTimer.shouldSendStopMessage())
 					TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(), (EntityPlayerMP) event.player);
 			}
 			else {
-				deathTimer.update();
+				deathTimer.update(20);
 				if (deathTimer.shouldSendStartMessage())
 					TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(Config.deathTime, deathTimer.getTime()),
 							(EntityPlayerMP) event.player);
@@ -210,6 +211,42 @@ public class SpiritUtil {
 				TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(), (EntityPlayerMP) event.player);
 			deathTimer.reset();
 		}
+	}
+
+	/**
+	 * Check if the player can be killed based on their game mode and the configuration setting
+	 * @param player player to check
+	 * @return are they normal, or creative/spectator with the permission to kill
+	 */
+	private static boolean canKillPlayerType(EntityPlayer player) {
+		return !(Config.onlyKillNormal && (player.isCreative() || player.isSpectator()));
+	}
+
+	/**
+	 * Check if a player is in one of their sealed rooms
+	 * @param player player to check
+	 * @return are they within the bounds a valid sealed room
+	 */
+	private static boolean isInSealedRoom(EntityPlayer player) {
+		SpiritRoomSealer[] roomSealers = JsonUtil.getSpiritData().getWorld(InfoUtil.getWorldId(player.world))
+				.getRoomSealers(InfoUtil.getPlayerUuid(player));
+		for (SpiritRoomSealer roomSealer : roomSealers)
+			if (roomSealer.getDimension() == player.world.provider.getDimension() && roomSealer.isSealed() &&
+					player.getEntityBoundingBox().intersectsWith(roomSealer.getDimensions()))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Check if a player is in range of a core
+	 * @param player player
+	 * @return the player is next to the core or a chain of logs that connects to the core
+	 */
+	private static boolean isInRangeOfCore(EntityPlayer player) {
+		return WorldUtil.hasBlocksNearbyViaChain(player.getPosition(), player.world, 1, 1, 1,
+				Integer.MAX_VALUE, ModBlocks.LOG, ModBlocks.CORE) ||
+				WorldUtil.hasBlocksNearbyViaChain(player.getPosition().up(), player.world, 1, 1, 1,
+						Integer.MAX_VALUE, ModBlocks.LOG, ModBlocks.CORE);
 	}
 
 	/**
@@ -227,6 +264,9 @@ public class SpiritUtil {
 		String dimensionCore = world.getDimensionCore(worldIn, pos).getPlayerId();
 		if (!dimensionCore.isEmpty())
 			return dimensionCore;
+		String roomSealer = world.getRoomSealer(worldIn, pos).getPlayerId();
+		if (!roomSealer.isEmpty())
+			return roomSealer;
 		return world.getCore(worldIn, pos).getPlayerId();
 	}
 
@@ -381,8 +421,8 @@ public class SpiritUtil {
 		for (DeathTimer deathTimer : deathTimers) {
 			if (deathTimer.equals(playerId)) {
 				ItemStack offHandItem = event.player.inventory.offHandInventory.get(0);
-				if (deathTimer.getTime() > 0 && offHandItem.getItem() == ModItems.LIFE_EXTENDER &&
-						offHandItem.getItemDamage() < offHandItem.getMaxDamage())
+				if (deathTimer.getTime() > 0 && (offHandItem.getItem() != ModItems.LIFE_EXTENDER ||
+						offHandItem.getItemDamage() == offHandItem.getMaxDamage()) && !isInSealedRoom(event.player))
 					TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(Config.deathTime, deathTimer.getTime()),
 							(EntityPlayerMP) event.player);
 				else
@@ -423,6 +463,47 @@ public class SpiritUtil {
 		SpiritData spiritData = JsonUtil.getSpiritData();
 		SpiritWorldData worldData = spiritData.getWorld(InfoUtil.getWorldId(event.getWorld()));
 		worldData.setDeathTimers(deathTimers);
+		JsonUtil.setSpiritData(spiritData);
+	}
+
+	/**
+	 * Register a room sealer for a player
+	 * @param worldIn world of sealer
+	 * @param pos position of sealer
+	 * @param player player that placed the sealer
+	 */
+	public static void registerRoomSealer(World worldIn, BlockPos pos, EntityPlayer player) {
+		SpiritData spiritData = JsonUtil.getSpiritData();
+		SpiritWorldData spiritWorldData = spiritData.getWorld(InfoUtil.getWorldId(worldIn));
+		spiritWorldData.registerRoomSealer(worldIn, pos, InfoUtil.getPlayerUuid(player));
+		JsonUtil.setSpiritData(spiritData);
+	}
+
+	/**
+	 * Update that status of a room sealer
+	 * @param worldIn world of sealer
+	 * @param pos position of sealer
+	 * @param isSealed is the room enclosed by Spirit Logs
+	 * @param dimensions size of the room
+	 */
+	public static void setRoomSealerStatus(World worldIn, BlockPos pos, boolean isSealed, AxisAlignedBB dimensions) {
+		SpiritData spiritData = JsonUtil.getSpiritData();
+		SpiritWorldData spiritWorldData = spiritData.getWorld(InfoUtil.getWorldId(worldIn));
+		SpiritRoomSealer roomSealer = spiritWorldData.getRoomSealer(worldIn, pos);
+		roomSealer.setSealed(isSealed);
+		roomSealer.setDimensions(dimensions);
+		JsonUtil.setSpiritData(spiritData);
+	}
+
+	/**
+	 * Remove a room sealer
+	 * @param worldIn world
+	 * @param pos position of sealer
+	 */
+	public static void removeRoomSealer(World worldIn, BlockPos pos) {
+		SpiritData spiritData = JsonUtil.getSpiritData();
+		SpiritWorldData spiritWorldData = spiritData.getWorld(InfoUtil.getWorldId(worldIn));
+		spiritWorldData.removeRoomSealer(worldIn, pos);
 		JsonUtil.setSpiritData(spiritData);
 	}
 }

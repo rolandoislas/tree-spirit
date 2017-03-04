@@ -2,7 +2,6 @@ package com.rolandoislas.treespirit.data.spirit;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 
@@ -15,6 +14,7 @@ public class SpiritWorldData {
 	private ArrayList<SpiritDimensionCore> dimensionCores = new ArrayList<SpiritDimensionCore>();
 	private ArrayList<SpiritPlayerInfo> players = new ArrayList<SpiritPlayerInfo>();
 	private ArrayList<DeathTimer> deathTimers = new ArrayList<DeathTimer>();
+	private ArrayList<SpiritRoomSealer> roomSealers = new ArrayList<SpiritRoomSealer>();
 
 	/**
 	 * Register a tree core
@@ -211,5 +211,57 @@ public class SpiritWorldData {
 	 */
 	public void setDeathTimers(ArrayList<DeathTimer> deathTimers) {
 		this.deathTimers = deathTimers;
+	}
+
+	/**
+	 * Register a room sealer
+	 * @param worldIn world of sealer
+	 * @param pos position of sealer
+	 * @param playerUuid player id
+	 */
+	public void registerRoomSealer(World worldIn, BlockPos pos, String playerUuid) {
+		SpiritRoomSealer sealer = new SpiritRoomSealer(worldIn, pos, playerUuid);
+		if (roomSealers.contains(sealer))
+			roomSealers.remove(sealer);
+		roomSealers.add(sealer);
+	}
+
+	/**
+	 * Get a room sealer from a block pos
+	 * @param worldIn world of sealer
+	 * @param pos position of sealer
+	 * @return room sealer
+	 */
+	public SpiritRoomSealer getRoomSealer(World worldIn, BlockPos pos) {
+		SpiritRoomSealer roomToFind = new SpiritRoomSealer(worldIn, pos);
+		for (SpiritRoomSealer roomSealer : roomSealers)
+			if (roomSealer.equals(roomToFind))
+				return roomSealer;
+		return roomToFind;
+	}
+
+	/**
+	 * Get all room sealers for a player
+	 * @param playerUuid player id
+	 * @return array of room sealers that can be empty if the player has none registered
+	 */
+	public SpiritRoomSealer[] getRoomSealers(String playerUuid) {
+		ArrayList<SpiritRoomSealer> playerRoomSealers = new ArrayList<SpiritRoomSealer>();
+		for (SpiritRoomSealer roomSealer : roomSealers)
+			if (roomSealer.getPlayerId().equals(playerUuid))
+				playerRoomSealers.add(roomSealer);
+		SpiritRoomSealer[] primitive = new SpiritRoomSealer[playerRoomSealers.size()];
+		for (SpiritRoomSealer roomSealer : playerRoomSealers)
+			primitive[playerRoomSealers.indexOf(roomSealer)] = roomSealer;
+		return primitive;
+	}
+
+	/**
+	 * Unregister a room sealer
+	 * @param worldIn world of sealer
+	 * @param pos position of sealer
+	 */
+	public void removeRoomSealer(World worldIn, BlockPos pos) {
+		roomSealers.remove(new SpiritRoomSealer(worldIn, pos));
 	}
 }

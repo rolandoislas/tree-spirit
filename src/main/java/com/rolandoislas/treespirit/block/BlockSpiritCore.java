@@ -3,8 +3,10 @@ package com.rolandoislas.treespirit.block;
 import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.data.Messages;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
+import com.rolandoislas.treespirit.tileentity.TileEntitySpiritCore;
 import com.rolandoislas.treespirit.util.SpiritUtil;
 import net.minecraft.block.BlockRotatedPillar;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -14,6 +16,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -21,12 +24,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
  * Created by Rolando on 2/28/2017.
  */
-public class BlockSpiritCore extends BlockRotatedPillar {
+public class BlockSpiritCore extends BlockRotatedPillar implements ITileEntityProvider {
 	public BlockSpiritCore() {
 		super(Material.WOOD);
 		this.setHardness(2.0F);
@@ -106,5 +110,11 @@ public class BlockSpiritCore extends BlockRotatedPillar {
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		if (SpiritUtil.getOwnerId(worldIn, pos).isEmpty())
 			worldIn.setBlockToAir(pos);
+	}
+
+	@Nullable
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileEntitySpiritCore();
 	}
 }

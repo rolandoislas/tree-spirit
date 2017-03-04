@@ -8,6 +8,10 @@ treespirit.config.general.onedimcoreperworld=One Dimension Core
 treespirit.config.general.onedimcoreperworld.tooltip=If enabled, only one core per player per dimension will be allowed.
 treespirit.config.general.neighborchangelog=Block Update Logs
 treespirit.config.general.neighborchangelog.tooltip=Should logs check if they can stay in the world when they receive a block update
+treespirit.config.general.onlykillnormal=Only Kill Normal
+treespirit.config.general.onlykillnormal.tooltip=If true only normal/adventure mode players will be killed when straying too far away from the core
+treespirit.config.general.corefeedsplayertype=Core Feeds Players
+treespirit.config.general.corefeedsplayertype.tooltip=Type of player that the core will feed around it.
 
 treespirit.config.client=Client
 treespirit.config.client.tooltip=Client Settings
@@ -41,6 +45,7 @@ tile.treespirit.core.normal.name=Tree Spirit Core
 tile.treespirit.core.elder.name=Elder Tree Spirit Core
 tile.treespirit.core.dimension.name=Dimension Tree Spirit Core
 tile.treespirit.grass.name=Spirit Tree Grass
+tile.treespirit.room_sealer.name=Infused Mushroom
 
 treespirit.message.core_placed_by_player=Silly player, cores are for trees.
 treespirit.message.elder_sapling_placed=Once this sapling grows %s, your fates will be intertwined.
@@ -53,6 +58,8 @@ treespirit.message.core_place_failed=No need to be extra tree spirit-y %s.
 treespirit.message.no_core=You have no core %s.
 treespirit.message.normal_sapling_plant_fail=Normal spirit saplings are too weak to grow on mundane earth.
 treespirit.message.mob_attacking_core=%s one of your cores is being attacked by %s in %s.
+treespirit.message.room_sealer_pass=Room is valid.
+treespirit.message.room_sealer_fail=Room is not valid.
 
 death.attack.tree_spirit=%s's tree has died.
 

@@ -7,17 +7,12 @@ import net.minecraft.world.World;
 /**
  * Created by Rolando on 3/2/2017.
  */
-public class SpiritDimensionCore extends SpiritCore {
+public class SpiritDimensionCore extends SpiritSapling {
 	public SpiritDimensionCore(World worldIn, BlockPos pos) {
 		super(worldIn, pos);
 	}
 
 	public SpiritDimensionCore(World worldIn, BlockPos pos, String playerUuid) {
 		super(worldIn, pos, playerUuid);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return SpiritCore.equals(this, obj, false);
 	}
 }

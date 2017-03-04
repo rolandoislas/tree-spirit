@@ -154,10 +154,18 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
-		if (!worldIn.isRemote) {
+		if (!worldIn.isRemote && worldIn.getLightFromNeighbors(pos.up()) >= 9) {
 			super.updateTick(worldIn, pos, state, rand);
-			if (worldIn.getLightFromNeighbors(pos.up()) >= 9 && rand.nextInt(7) == 0)
-				this.grow(worldIn, rand, pos, state);
+			EnumWood type = EnumWood.NORMAL.getFromMeta(getMetaFromState(state));
+			switch (type) {
+				case ELDER:
+					this.generateTree(worldIn, pos, state, rand);
+					break;
+				default:
+					if (rand.nextInt(7) == 0)
+						this.grow(worldIn, rand, pos, state);
+					break;
+			}
 		}
 	}
 
