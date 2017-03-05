@@ -7,6 +7,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 /**
@@ -40,5 +41,11 @@ public class Recipes {
 		lifeExtender.setItemDamage(lifeExtender.getMaxDamage());
 		GameRegistry.addRecipe(new ShapelessOreRecipe(lifeExtender, ModItems.ESSENCE, Items.PAPER,
 				new ItemStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage())));
+		// Room Sealer
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ModItems.ROOM_SEALER, Blocks.BROWN_MUSHROOM,
+				ModItems.ESSENCE));
+		// Door
+		GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.DOOR, "WW ", "WW ", "WW ", 'W', ModBlocks.PLANK));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.DOOR, " WW", " WW", " WW", 'W', ModBlocks.PLANK));
 	}
 }

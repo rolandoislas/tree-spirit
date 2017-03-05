@@ -1,5 +1,6 @@
 package com.rolandoislas.treespirit.registry;
 
+import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.block.EnumWood;
 import com.rolandoislas.treespirit.data.SubItem;
 import com.rolandoislas.treespirit.gui.renderer.ModItemColors;
@@ -9,10 +10,7 @@ import com.rolandoislas.treespirit.item.ItemLifeExtender;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemMultiTexture;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
@@ -34,6 +32,8 @@ public class ModItems {
 	public static final Item GRASS = createItemBlock(ModBlocks.GRASS);
 	public static final Item LIFE_EXTENDER = new ItemLifeExtender();
 	public static final Item ROOM_SEALER = createItemBlock(ModBlocks.ROOM_SEALER).setMaxStackSize(1);
+	public static final Item DOOR = new ItemDoor(ModBlocks.DOOR).setUnlocalizedName(TreeSpirit.MODID + ".door")
+			.setRegistryName(TreeSpirit.MODID, "door").setCreativeTab(ModCreativeTabs.MAIN);
 
 	private static Item createItemBlockWithSubtypes(Block block, final Class<? extends Enum> enumClass,
 													final String defaultEnumInstanceName) {
@@ -64,6 +64,7 @@ public class ModItems {
 		registerTexture(GRASS);
 		registerTexture(LIFE_EXTENDER);
 		registerTexture(ROOM_SEALER);
+		registerTexture(DOOR);
 	}
 
 	private static void registerTexture(Item item) {
@@ -92,6 +93,7 @@ public class ModItems {
 		GameRegistry.register(GRASS);
 		GameRegistry.register(LIFE_EXTENDER);
 		GameRegistry.register(ROOM_SEALER);
+		GameRegistry.register(DOOR);
 	}
 
 	public static void registerColors() {

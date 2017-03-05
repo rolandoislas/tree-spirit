@@ -44,7 +44,8 @@ public class BlockSpiritGrass extends BlockGrass {
 		if (spreadBlock == Blocks.DIRT && !worldIn.getBlockState(spreadPos.up()).isNormalCube())
 			worldIn.setBlockState(spreadPos, ModBlocks.GRASS.getDefaultState());
 		// Check if this block should turn to dirt
-		if (worldIn.getBlockState(pos.up()).isNormalCube())
+		if (worldIn.getBlockState(pos.up()).isNormalCube() &&
+				worldIn.getBlockState(pos.up()).getBlock() != ModBlocks.LOG)
 			worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
 	}
 

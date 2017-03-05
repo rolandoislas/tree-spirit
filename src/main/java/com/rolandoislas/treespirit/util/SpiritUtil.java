@@ -115,7 +115,7 @@ public class SpiritUtil {
 		if (core.getDimension() == null || core.getPos() == null)
 			return;
 		EntityPlayer player = WorldUtil.getPlayer(core.getPlayerId());
-		if (player != null)
+		if (player != null && canKillPlayerType(player))
 			player.attackEntityFrom(DAMAGE_TREE_SPIRIT, player.getMaxHealth());
 		// Reset
 		World world = WorldUtil.getWorldWithLoadedChunk(worldIn, pos, core.getDimension());

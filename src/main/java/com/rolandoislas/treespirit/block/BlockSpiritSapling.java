@@ -103,6 +103,7 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 	private void generateTree(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		if (worldIn.isRemote)
 			return;
+		spawnCore(worldIn, pos, state);
 		int height = 5;
 		// ~50% to add up to 2 more to height
 		if (rand.nextFloat() < .5)
@@ -123,6 +124,9 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 		for (int leafIndex = 1; leafIndex <= leafHeight; leafIndex++)
 			WorldUtil.setBlocksAroundPos(pos.up(height - leafIndex), worldIn, 2, 0, 2, leafState,
 					false, true, (leafIndex == 1 || leafIndex == leafHeight) ? 5 : 0);
+	}
+
+	private void spawnCore(World worldIn, BlockPos pos, IBlockState state) {
 		// Spawn the core
 		String owner = SpiritUtil.getOwnerId(worldIn, pos);
 		EnumWood type = EnumWood.NORMAL.getFromMeta(getMetaFromState(state));
@@ -189,8 +193,7 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 							placer.getDisplayName());
 				}
 				else
-					SpiritUtil.sendMessage((EntityPlayer) placer,
-							Messages.CORE_PLACE_FAILED, placer.getDisplayName());
+					failToPlace((EntityPlayer) placer, Messages.CORE_PLACE_FAILED, worldIn, pos, state);
 				break;
 			case DIMENSION:
 				if (hasCore) {
@@ -200,23 +203,23 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 								Messages.DIMENSION_SAPLING_PLACED, placer.getDisplayName());
 					}
 					else
-						SpiritUtil.sendMessage((EntityPlayer) placer,
-								Messages.DIMENSION_CORE_PLACE_FAILED, placer.getDisplayName());
+						failToPlace((EntityPlayer) placer, Messages.DIMENSION_CORE_PLACE_FAILED, worldIn, pos, state);
 				}
 				else
-					SpiritUtil.sendMessage((EntityPlayer) placer,
-							Messages.NO_CORE, placer.getDisplayName());
+					failToPlace((EntityPlayer) placer, Messages.NO_CORE, worldIn, pos, state);
 				break;
 			case NORMAL:
 				if (worldIn.getBlockState(pos.down()).getBlock() != ModBlocks.GRASS &&
-						worldIn.getBlockState(pos.down()).getBlock() != ModBlocks.CORE) {
-					this.dropBlockAsItem(worldIn, pos, state, 0);
-					worldIn.setBlockToAir(pos);
-					SpiritUtil.sendMessage((EntityPlayer) placer,
-							Messages.NORMAL_SAPLING_PLANT_FAIL, placer.getDisplayName());
-				}
+						worldIn.getBlockState(pos.down()).getBlock() != ModBlocks.CORE)
+					failToPlace((EntityPlayer) placer, Messages.NORMAL_SAPLING_PLANT_FAIL, worldIn, pos, state);
 				break;
 		}
+	}
+
+	private void failToPlace(EntityPlayer placer, String message, World worldIn, BlockPos pos, IBlockState state) {
+		this.dropBlockAsItem(worldIn, pos, state, 0);
+		worldIn.setBlockToAir(pos);
+		SpiritUtil.sendMessage(placer, message, placer.getDisplayName());
 	}
 
 	@Override

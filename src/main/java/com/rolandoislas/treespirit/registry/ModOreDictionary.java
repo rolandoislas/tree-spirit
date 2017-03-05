@@ -20,6 +20,8 @@ public class ModOreDictionary {
 		registerItem(ModItems.ESSENCE, "essence");
 		registerItem(ModItems.LIFE_EXTENDER, "utility");
 		registerItem(ModItems.ROOM_SEALER, "utility");
+		registerItem(ModItems.DOOR, "door");
+		registerItem(ModItems.DEV_TOOL, "utility");
 	}
 
 	private static void registerItem(Item itemIn, String name) {

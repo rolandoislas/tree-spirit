@@ -95,13 +95,13 @@ public class BlockRoomSealer extends BlockBush {
 	private int[] getDownUp(World worldIn, BlockPos pos) {
 		int down = pos.getY();
 		for (int y = 1; y <= MAX_SIZE; y++) {
-			if (worldIn.getBlockState(pos.down(y)).getBlock() != ModBlocks.LOG)
+			if (!isCompatibleBlock(worldIn.getBlockState(pos.down(y)).getBlock()))
 				break;
 			down--;
 		}
 		int up = pos.getY();
 		for (int y = 1; y <= MAX_SIZE - (pos.getY() - down); y++) {
-			if (worldIn.getBlockState(pos.up(y)).getBlock() != ModBlocks.LOG)
+			if (!isCompatibleBlock(worldIn.getBlockState(pos.up(y)).getBlock()))
 				break;
 			up++;
 		}
@@ -117,13 +117,13 @@ public class BlockRoomSealer extends BlockBush {
 	private int[] getWestEast(World worldIn, BlockPos pos) {
 		int west = pos.getX();
 		for (int x = 1; x <= MAX_SIZE; x++) {
-			if (worldIn.getBlockState(pos.west(x)).getBlock() != ModBlocks.LOG)
+			if (!isCompatibleBlock(worldIn.getBlockState(pos.west(x)).getBlock()))
 				break;
 			west--;
 		}
 		int east = pos.getX();
 		for (int x = 1; x <= MAX_SIZE - (pos.getX() - west); x++) {
-			if (worldIn.getBlockState(pos.east(x)).getBlock() != ModBlocks.LOG)
+			if (!isCompatibleBlock(worldIn.getBlockState(pos.east(x)).getBlock()))
 				break;
 			east++;
 		}
@@ -139,13 +139,13 @@ public class BlockRoomSealer extends BlockBush {
 	private int[] getNorthSouth(World worldIn, BlockPos pos) {
 		int north = pos.getZ();
 		for (int z = 1; z <= MAX_SIZE; z++) {
-			if (worldIn.getBlockState(pos.north(z)).getBlock() != ModBlocks.LOG)
+			if (!isCompatibleBlock(worldIn.getBlockState(pos.north(z)).getBlock()))
 				break;
 			north--;
 		}
 		int south = pos.getZ();
 		for (int z = 1; z <= MAX_SIZE - (pos.getZ() - north); z++) {
-			if (worldIn.getBlockState(pos.south(z)).getBlock() != ModBlocks.LOG)
+			if (!isCompatibleBlock(worldIn.getBlockState(pos.south(z)).getBlock()))
 				break;
 			south++;
 		}
@@ -162,9 +162,13 @@ public class BlockRoomSealer extends BlockBush {
 		for (int y = 0; y <= face.maxY - face.minY; y++)
 			for (int z = 0; z <= face.maxZ - face.minZ; z++)
 				for (int x = 0; x <= face.maxX - face.minX; x++)
-					if (worldIn.getBlockState(startPos.east(x).south(z).up(y)).getBlock() != ModBlocks.LOG)
+					if (!isCompatibleBlock(worldIn.getBlockState(startPos.east(x).south(z).up(y)).getBlock()))
 						return false;
 		return true;
+	}
+
+	private boolean isCompatibleBlock(Block block) {
+		return block == ModBlocks.DOOR || block == ModBlocks.LOG;
 	}
 
 	@Override

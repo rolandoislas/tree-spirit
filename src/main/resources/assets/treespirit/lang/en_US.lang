@@ -34,6 +34,7 @@ item.treespirit.essence.name=Tree Spirit Essence
 item.treespirit.life_extender.name=Scribblings of the Laumes
 item.treespirit.life_extender.lore=Some say this has been passed on from tree spirit to tree spirit causing each owner to go mad and scrawl their own ravings.
 item.treespirit.life_extender.time=Minutes: %d Seconds: %d
+item.treespirit.door.name=Spirit Wood Door
 
 tile.treespirit.leaf.name=Tree Spirit Leaves
 tile.treespirit.log.name=Tree Spirit Wood
