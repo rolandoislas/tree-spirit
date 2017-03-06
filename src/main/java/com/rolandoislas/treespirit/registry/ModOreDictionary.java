@@ -1,7 +1,6 @@
 package com.rolandoislas.treespirit.registry;
 
 import com.rolandoislas.treespirit.TreeSpirit;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -13,6 +12,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class ModOreDictionary {
 	public static void register() {
 		registerItem(ModItems.LOG, "treeWood");
+		registerItem(ModItems.LOG, "logWood");
 		registerItem(ModItems.SAPLING, "treeSapling");
 		registerItem(ModItems.PLANK, "plankWood");
 		registerItem(ModItems.GRASS, "blockGrass");
@@ -22,6 +22,7 @@ public class ModOreDictionary {
 		registerItem(ModItems.ROOM_SEALER, "utility");
 		registerItem(ModItems.DOOR, "door");
 		registerItem(ModItems.DEV_TOOL, "utility");
+		registerItem(ModItems.CORE, "utility");
 	}
 
 	private static void registerItem(Item itemIn, String name) {

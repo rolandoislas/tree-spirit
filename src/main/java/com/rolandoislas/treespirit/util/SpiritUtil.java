@@ -170,7 +170,7 @@ public class SpiritUtil {
 		if (event.side.equals(Side.CLIENT) || event.player.world.isRemote)
 			return;
 		// Slow the tick check down to once per second
-		if (event.player.ticksExisted % 20 != 0)
+		if (event.player.world.getTotalWorldTime() % 20 != 0)
 			return;
 		// Death check
 		SpiritData spiritData = JsonUtil.getSpiritData();
@@ -198,9 +198,9 @@ public class SpiritUtil {
 			}
 			else {
 				deathTimer.update(20);
-				if (deathTimer.shouldSendStartMessage())
-					TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(Config.deathTime, deathTimer.getTime()),
-							(EntityPlayerMP) event.player);
+				deathTimer.shouldSendStartMessage(); // Ignore
+				TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(Config.deathTime, deathTimer.getTime()),
+						(EntityPlayerMP) event.player);
 			}
 			// Check death
 			if (deathTimer.isDead())
