@@ -32,6 +32,9 @@ public class Config {
 	public static boolean onlyKillNormal;
 	public static EnumPlayerType coreFeedsPlayerType;
 	public static boolean worldTypeSkyTreeDefault;
+	public static boolean playerDeathDestroysCore;
+	public static boolean enableSkyTreeWorld;
+	public static boolean growCropsAroundPlayer;
 
 	public static void setConfigFile(File configFile) {
 		config = new Configuration(configFile);
@@ -56,6 +59,8 @@ public class Config {
 						EnumPlayerType.TREE_SPIRIT.name(), "", new String[]{EnumPlayerType.NORMAL.name(),
 								EnumPlayerType.TREE_SPIRIT.name(), EnumPlayerType.NONE.name()},
 						BASE_LANG + "general.corefeedsplayertype")) : EnumPlayerType.NONE;
+		growCropsAroundPlayer = config.getBoolean("GrowCropsAroundPlayer", Configuration.CATEGORY_GENERAL, false,
+				"", BASE_LANG + Configuration.CATEGORY_GENERAL + ".grow_crops_around_player");
 		// Client
 		config.setCategoryLanguageKey(Configuration.CATEGORY_CLIENT, BASE_LANG + "client");
 		deathWarningType = EnumDeathWarning.valueOf(config.getString(
@@ -74,6 +79,10 @@ public class Config {
 		config.setCategoryLanguageKey(CATEGORY_ADVANCED, BASE_LANG + CATEGORY_ADVANCED);
 		worldTypeSkyTreeDefault = config.getBoolean("WorldTypeSkyTree", CATEGORY_ADVANCED, false,
 				"", BASE_LANG + CATEGORY_ADVANCED + ".worldtypeskytree");
+		playerDeathDestroysCore = config.getBoolean("PlayerDeathDestroysCore", CATEGORY_ADVANCED, true,
+				"", BASE_LANG + CATEGORY_ADVANCED + ".player_death_destroys_core");
+		enableSkyTreeWorld = config.getBoolean("EnableWorldTypeSkyTree", CATEGORY_ADVANCED, false,
+				"", BASE_LANG + CATEGORY_ADVANCED + ".enable_world_type_sky_tree");
 		config.save();
 	}
 

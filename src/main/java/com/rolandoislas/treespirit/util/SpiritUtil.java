@@ -101,36 +101,24 @@ public class SpiritUtil {
 	 * Remove a core and kill the linked player
 	 * @param worldIn world containing core
 	 * @param pos core position
-	 * @param playerUuid
 	 */
-	public static void removeCore(World worldIn, BlockPos pos, String playerUuid) {
+	public static void removeCore(World worldIn, BlockPos pos) {
 		if (worldIn.isRemote)
 			return;
 		// Get data
 		SpiritData spiritData = JsonUtil.getSpiritData();
 		SpiritWorldData spiritWorldData = spiritData.getWorld(InfoUtil.getWorldId(worldIn));
-		SpiritCore core = spiritWorldData.getCore(playerUuid);
-		if (core.getDimension() == null)
-			core = spiritWorldData.getCore(worldIn, pos);
+		SpiritCore core = spiritWorldData.getCore(worldIn, pos);
 		if (core.getDimension() == null || core.getPos() == null)
 			return;
 		EntityPlayer player = WorldUtil.getPlayer(core.getPlayerId());
-		if (player != null && canKillPlayerType(player))
-			player.attackEntityFrom(DAMAGE_TREE_SPIRIT, player.getMaxHealth());
+		killPlayer(player);
 		// Reset
 		World world = WorldUtil.getWorldWithLoadedChunk(worldIn, pos, core.getDimension());
 		if (world == null)
 			return;
 		spiritWorldData.removeCore(world, pos);
 		JsonUtil.setSpiritData(spiritData);
-		if (player != null)
-			TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(), (EntityPlayerMP) player);
-		for (DeathTimer deathTimer : deathTimers) {
-			if (deathTimer.equals(core.getPlayerId())) {
-				deathTimers.remove(deathTimer);
-				break;
-			}
-		}
 		for (SpiritDimensionCore dimensionCore : spiritWorldData.getDimensionCores(core.getPlayerId()))
 			removeDimensionCore(worldIn, dimensionCore.getPos(), dimensionCore.getPlayerId());
 		if (world.getBlockState(pos).getBlock() == ModBlocks.CORE)
@@ -144,8 +132,6 @@ public class SpiritUtil {
 	public static void playerDeathEvent(LivingDeathEvent event) {
 		if (!(event.getEntity() instanceof EntityPlayer))
 			return;
-		if (event.getSource() == SpiritUtil.DAMAGE_TREE_SPIRIT)
-			return;
 		final EntityPlayer player = (EntityPlayer) event.getEntity();
 		if (player.world.isRemote)
 			return;
@@ -156,10 +142,12 @@ public class SpiritUtil {
 			return;
 		player.world.provider.setDimension(core.getDimension());
 		// Mimic server death message
-		for (EntityPlayer entityPlayer : player.world.playerEntities)
-			sendMessage(entityPlayer, Messages.PLAYER_DIED, player.getDisplayName());
+		if (event.getSource() != SpiritUtil.DAMAGE_TREE_SPIRIT)
+			for (EntityPlayer entityPlayer : player.world.playerEntities)
+				sendMessage(entityPlayer, Messages.PLAYER_DIED, player.getDisplayName());
 		// Remove the core
-		removeCore(player.world, core.getPos(), "");
+		if (Config.playerDeathDestroysCore)
+			removeCore(player.world, core.getPos());
 	}
 
 	/**
@@ -172,13 +160,17 @@ public class SpiritUtil {
 		// Slow the tick check down to once per second
 		if (event.player.world.getTotalWorldTime() % 20 != 0)
 			return;
-		// Death check
+		// Get player data
 		SpiritData spiritData = JsonUtil.getSpiritData();
 		SpiritWorldData spiritWorldData = spiritData.getWorld(InfoUtil.getWorldId(event.player.world));
 		String playerUuid = InfoUtil.getPlayerUuid(event.player);
 		SpiritCore core = spiritWorldData.getCore(playerUuid);
 		if (core.getPos() == null)
 			return;
+		// Crop grow check
+		if (Config.growCropsAroundPlayer)
+			WorldUtil.growCropsAround(event.player.getPosition(), event.player.world);
+		// Death Check
 		DeathTimer deathTimer = null;
 		for (DeathTimer timer : deathTimers)
 			if (timer.equals(playerUuid))
@@ -187,7 +179,7 @@ public class SpiritUtil {
 			deathTimer = new DeathTimer(playerUuid);
 			deathTimers.add(deathTimer);
 		}
-		if (!isInRangeOfCore(event.player) && !isInSealedRoom(event.player) && canKillPlayerType(event.player)) {
+		if (!isInRangeOfCore(event.player, core) && !isInSealedRoom(event.player) && canKillPlayerType(event.player)) {
 			// Damage life extender instead of updating player death counter
 			ItemStack offHandItem = event.player.inventory.offHandInventory.get(0);
 			if (offHandItem.getItem() == ModItems.LIFE_EXTENDER &&
@@ -204,7 +196,7 @@ public class SpiritUtil {
 			}
 			// Check death
 			if (deathTimer.isDead())
-				removeCore(event.player.world, core.getPos(), playerUuid);
+					killPlayer(event.player);
 		}
 		else {
 			if (deathTimer.shouldSendStopMessage())
@@ -214,12 +206,32 @@ public class SpiritUtil {
 	}
 
 	/**
+	 * Kills a player as the spirit tree
+	 * @param player player to kill
+	 */
+	private static void killPlayer(EntityPlayer player) {
+		if (player == null)
+			return;
+		if (canKillPlayerType(player))
+			player.attackEntityFrom(DAMAGE_TREE_SPIRIT, player.getMaxHealth());
+		if (player instanceof EntityPlayerMP)
+			TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(), (EntityPlayerMP) player);
+		// Reset death timer
+		for (DeathTimer deathTimer : deathTimers) {
+			if (deathTimer.equals(InfoUtil.getPlayerUuid(player))) {
+				deathTimers.remove(deathTimer);
+				break;
+			}
+		}
+	}
+
+	/**
 	 * Check if the player can be killed based on their game mode and the configuration setting
 	 * @param player player to check
 	 * @return are they normal, or creative/spectator with the permission to kill
 	 */
 	private static boolean canKillPlayerType(EntityPlayer player) {
-		return !(Config.onlyKillNormal && (player.isCreative() || player.isSpectator()));
+		return !(Config.onlyKillNormal && (player.isCreative() || player.isSpectator())) && !player.isDead;
 	}
 
 	/**
@@ -240,12 +252,14 @@ public class SpiritUtil {
 	/**
 	 * Check if a player is in range of a core
 	 * @param player player
+	 * @param core players core (used to get radius of core)
 	 * @return the player is next to the core or a chain of logs that connects to the core
 	 */
-	private static boolean isInRangeOfCore(EntityPlayer player) {
-		return WorldUtil.hasBlocksNearbyViaChain(player.getPosition(), player.world, 1, 1, 1,
+	private static boolean isInRangeOfCore(EntityPlayer player, SpiritCore core) {
+		int radius = core.getLevel() + 1;
+		return WorldUtil.hasBlocksNearbyViaChain(player.getPosition(), player.world, radius, radius, radius,
 				Integer.MAX_VALUE, ModBlocks.LOG, ModBlocks.CORE) ||
-				WorldUtil.hasBlocksNearbyViaChain(player.getPosition().up(), player.world, 1, 1, 1,
+				WorldUtil.hasBlocksNearbyViaChain(player.getPosition().up(), player.world, radius, radius, radius,
 						Integer.MAX_VALUE, ModBlocks.LOG, ModBlocks.CORE);
 	}
 
@@ -505,5 +519,39 @@ public class SpiritUtil {
 		SpiritWorldData spiritWorldData = spiritData.getWorld(InfoUtil.getWorldId(worldIn));
 		spiritWorldData.removeRoomSealer(worldIn, pos);
 		JsonUtil.setSpiritData(spiritData);
+	}
+
+	/**
+	 * Upgrade an elder core's level
+	 * @param worldIn world of core
+	 * @param pos position of core
+	 * @return new level, or -1 on failure
+	 */
+	public static int upgradeCore(World worldIn, BlockPos pos) {
+		SpiritData spiritData = JsonUtil.getSpiritData();
+		SpiritWorldData spiritWorldData = spiritData.getWorld(InfoUtil.getWorldId(worldIn));
+		SpiritCore core = spiritWorldData.getCore(worldIn, pos);
+		if (core.isEmpty() || core.getLevel() >= 2)
+			return -1;
+		core.setLevel(core.getLevel() + 1);
+		JsonUtil.setSpiritData(spiritData);
+		return core.getLevel();
+	}
+
+	/**
+	 * Downgrade an elder core's level
+	 * @param worldIn world of core
+	 * @param pos position of core
+	 * @return new level, or -1 on failure
+	 */
+	public static int downgradeCore(World worldIn, BlockPos pos) {
+		SpiritData spiritData = JsonUtil.getSpiritData();
+		SpiritWorldData spiritWorldData = spiritData.getWorld(InfoUtil.getWorldId(worldIn));
+		SpiritCore core = spiritWorldData.getCore(worldIn, pos);
+		if (core.isEmpty() || core.getLevel() <= 0)
+			return -1;
+		core.setLevel(core.getLevel() - 1);
+		JsonUtil.setSpiritData(spiritData);
+		return core.getLevel();
 	}
 }

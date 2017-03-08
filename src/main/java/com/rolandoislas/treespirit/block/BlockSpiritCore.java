@@ -2,8 +2,12 @@ package com.rolandoislas.treespirit.block;
 
 import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.data.Messages;
+import com.rolandoislas.treespirit.data.spirit.SpiritCore;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
+import com.rolandoislas.treespirit.registry.ModItems;
 import com.rolandoislas.treespirit.tileentity.TileEntitySpiritCore;
+import com.rolandoislas.treespirit.util.InfoUtil;
+import com.rolandoislas.treespirit.util.JsonUtil;
 import com.rolandoislas.treespirit.util.SpiritUtil;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.ITileEntityProvider;
@@ -18,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -89,6 +94,7 @@ public class BlockSpiritCore extends BlockRotatedPillar implements ITileEntityPr
 		if (!(placer instanceof EntityPlayer))
 			return;
 		SpiritUtil.sendMessage((EntityPlayer)placer, Messages.CORE_PLACED_BY_PLAYER);
+		this.dropBlockAsItem(worldIn, pos, state, 0);
 		worldIn.setBlockToAir(pos);
 	}
 
@@ -98,7 +104,7 @@ public class BlockSpiritCore extends BlockRotatedPillar implements ITileEntityPr
 			return;
 		switch (EnumWood.NORMAL.getFromMeta(getMetaFromState(state))) {
 			case ELDER:
-				SpiritUtil.removeCore(worldIn, pos, "");
+				SpiritUtil.removeCore(worldIn, pos);
 				break;
 			case DIMENSION:
 				SpiritUtil.removeDimensionCore(worldIn, pos, "");
@@ -116,5 +122,36 @@ public class BlockSpiritCore extends BlockRotatedPillar implements ITileEntityPr
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntitySpiritCore();
+	}
+
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+									EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (worldIn.isRemote)
+			return true;
+		if (!hand.equals(EnumHand.MAIN_HAND))
+			return false;
+		String owner = SpiritUtil.getOwnerId(worldIn, pos);
+		if (!owner.equals(InfoUtil.getPlayerUuid(playerIn)))
+			SpiritUtil.sendMessage(playerIn, Messages.CORE_NOT_OWNER);
+		else if (ItemStack.areItemsEqual(playerIn.getHeldItemMainhand(), ModItems.CORE.getDefaultInstance())){
+			int level = SpiritUtil.upgradeCore(worldIn, pos);
+			if (level > -1) {
+				playerIn.getHeldItemMainhand().shrink(1);
+				SpiritUtil.sendMessage(playerIn, Messages.CORE_UPGRADE_PASS, level + 1);
+			}
+			else
+				SpiritUtil.sendMessage(playerIn, Messages.CORE_UPGRADE_FAIL, level + 1);
+		}
+		else if (playerIn.getHeldItemMainhand().isEmpty() && playerIn.isSneaking()) {
+			int level = SpiritUtil.downgradeCore(worldIn, pos);
+			if (level > -1) {
+				playerIn.inventory.addItemStackToInventory(new ItemStack(ModItems.CORE, 1, 0));
+				SpiritUtil.sendMessage(playerIn, Messages.CORE_DOWNGRADE_PASS, level + 1);
+			}
+			else
+				SpiritUtil.sendMessage(playerIn, Messages.CORE_DOWNGRADE_FAIL, level + 1);
+		}
+		return true;
 	}
 }

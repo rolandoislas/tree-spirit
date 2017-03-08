@@ -3,6 +3,7 @@ package com.rolandoislas.treespirit.util;
 import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.data.Messages;
 import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -177,5 +178,23 @@ public class WorldUtil {
 				return checkBlockPos;
 		}
 		return null;
+	}
+
+	/**
+	 * Grow crops around a block
+	 * @param position block
+	 * @param world world of block
+	 */
+	public static void growCropsAround(BlockPos position, World world) {
+		BlockPos pos = position.west().north();
+		for (int x = 0; x < 3; x++) {
+			for (int z = 0; z < 3; z++) {
+				BlockPos p = pos.east(x).south(z);
+				IBlockState state = world.getBlockState(p);
+				Block block = state.getBlock();
+				if (block instanceof IGrowable && world.rand.nextFloat() < .05)
+					((IGrowable) block).grow(world, world.rand, p, state);
+			}
+		}
 	}
 }

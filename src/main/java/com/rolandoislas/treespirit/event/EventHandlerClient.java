@@ -31,7 +31,7 @@ public class EventHandlerClient {
 
 	@SubscribeEvent(priority =  EventPriority.NORMAL)
 	public void guiOpenEvent(GuiOpenEvent event) {
-		if (Config.worldTypeSkyTreeDefault && event.getGui() instanceof GuiCreateWorld)
+		if (WorldTypes.skyTree != null && Config.worldTypeSkyTreeDefault && event.getGui() instanceof GuiCreateWorld)
 			ReflectionHelper.setPrivateValue(GuiCreateWorld.class, (GuiCreateWorld) event.getGui(),
 					WorldTypes.skyTree.getWorldTypeID(), "field_146331_K", "selectedIndex");
 	}

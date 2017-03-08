@@ -8,7 +8,7 @@ Dev: [![Build Status](https://travis-ci.org/rolandoislas/tree-spirit.svg?branch=
 
 Tree spirit transforms a player into a tree guardian.
 
-Protect the tree from na'er-do-wells, the elements, and all that wish to see it die.
+Protect the tree from ne'er-do-wells, the elements, and all that wish to see it die.
 
 ## Features
 

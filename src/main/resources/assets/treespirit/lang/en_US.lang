@@ -12,6 +12,8 @@ treespirit.config.general.onlykillnormal=Only Kill Normal
 treespirit.config.general.onlykillnormal.tooltip=If true only normal/adventure mode players will be killed when straying too far away from the core
 treespirit.config.general.corefeedsplayertype=Core Feeds Players
 treespirit.config.general.corefeedsplayertype.tooltip=Type of player that the core will feed around it.
+treespirit.config.general.grow_crops_around_player=Grow Crops Around Player
+treespirit.config.general.grow_crops_around_player.tooltip=Grow crops around a player that has a core
 
 treespirit.config.client=Client
 treespirit.config.client.tooltip=Client Settings
@@ -31,6 +33,10 @@ treespirit.config.advanced=Advanced
 treespirit.config.advanced.tooltip=Advanced User Settings
 treespirit.config.advanced.worldtypeskytree=Default Generator Sky Tree
 treespirit.config.advanced.worldtypeskytree.tooltip=Set's the default generator to Sky Tree on the world create screen
+treespirit.config.advanced.player_death_destroys_core=Player Death Destroys Core
+treespirit.config.advanced.player_death_destroys_core.tooltip=Should a player death destroy their core
+treespirit.config.advanced.enable_world_type_sky_tree=Enable Sky Tree World Type
+treespirit.config.advanced.enable_world_type_sky_tree.tooltip=Enables the sky tree world type as a generator option
 
 itemGroup.treespirit=Tree Spirit
 
@@ -66,6 +72,11 @@ treespirit.message.normal_sapling_plant_fail=Normal spirit saplings are too weak
 treespirit.message.mob_attacking_core=%s one of your cores is being attacked by %s in %s.
 treespirit.message.room_sealer_pass=Room is valid.
 treespirit.message.room_sealer_fail=Room is not valid.
+treespirit.message.core_not_owned=This core does not belong to you! Punch it. I dare you.
+treespirit.message.core_upgrade_pass=Core upgraded. Its radius is now %d.
+treespirit.message.core_upgrade_fail=This core cannot be upgraded.
+treespirit.message.core_downgrade_pass=Core downgraded. Its radius is now %d.
+treespirit.message.core_downgrade_fail=This core cannot be downgraded.
 
 death.attack.tree_spirit=%s's tree has died.
 

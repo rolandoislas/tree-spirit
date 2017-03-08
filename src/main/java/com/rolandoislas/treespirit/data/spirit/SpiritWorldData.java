@@ -167,7 +167,7 @@ public class SpiritWorldData {
 	 */
 	public void registerDimensionCores(String playerId) {
 		for (int core = 0; core < dimensionCores.size(); core++) {
-			if (dimensionCores.get(core).playerUid.equals(playerId)) {
+			if (dimensionCores.get(core).getPlayerId().equals(playerId)) {
 				dimensionCores.remove(core);
 				core--;
 			}

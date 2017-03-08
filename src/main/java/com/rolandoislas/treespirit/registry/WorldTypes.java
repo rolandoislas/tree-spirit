@@ -1,5 +1,6 @@
 package com.rolandoislas.treespirit.registry;
 
+import com.rolandoislas.treespirit.data.Config;
 import com.rolandoislas.treespirit.world.WorldProviderEndSkyTree;
 import com.rolandoislas.treespirit.world.WorldProviderHellSkyTree;
 import com.rolandoislas.treespirit.world.WorldProviderSurfaceSkyTree;
@@ -15,15 +16,17 @@ public class WorldTypes {
 	public static WorldType skyTree;
 
 	public static void register() {
-		skyTree = new WorldTypeSkyTree();
-		DimensionManager.unregisterDimension(-1);
-		DimensionManager.unregisterDimension(0);
-		DimensionManager.unregisterDimension(1);
-		DimensionManager.registerDimension(-1, DimensionType.register("Nether", "_nether", -1,
-				WorldProviderHellSkyTree.class, false));
-		DimensionManager.registerDimension(0,  DimensionType.register("Overworld", "", 0,
-				WorldProviderSurfaceSkyTree.class, true));
-		DimensionManager.registerDimension(1,  DimensionType.register("The End", "_end", 1,
-				WorldProviderEndSkyTree.class, false));
+		if (Config.enableSkyTreeWorld) {
+			skyTree = new WorldTypeSkyTree();
+			DimensionManager.unregisterDimension(-1);
+			DimensionManager.unregisterDimension(0);
+			DimensionManager.unregisterDimension(1);
+			DimensionManager.registerDimension(-1, DimensionType.register("Nether", "_nether", -1,
+					WorldProviderHellSkyTree.class, false));
+			DimensionManager.registerDimension(0, DimensionType.register("Overworld", "", 0,
+					WorldProviderSurfaceSkyTree.class, true));
+			DimensionManager.registerDimension(1, DimensionType.register("The End", "_end", 1,
+					WorldProviderEndSkyTree.class, false));
+		}
 	}
 }
