@@ -19,6 +19,7 @@ import static com.rolandoislas.treespirit.TreeSpirit.MODID;
 public class Config {
 	private static final String BASE_LANG = MODID + ".config.";
 	private static final String CATEGORY_DESTRUCTION = "destruction";
+	private static final String CATEGORY_ADVANCED = "advanced";
 	private static Configuration config;
 	public static int deathTime;
 	public static boolean randomTicksLog;
@@ -30,6 +31,7 @@ public class Config {
 	public static boolean creepersDestroyCore;
 	public static boolean onlyKillNormal;
 	public static EnumPlayerType coreFeedsPlayerType;
+	public static boolean worldTypeSkyTreeDefault;
 
 	public static void setConfigFile(File configFile) {
 		config = new Configuration(configFile);
@@ -68,6 +70,10 @@ public class Config {
 				BASE_LANG + CATEGORY_DESTRUCTION + ".skeleton");
 		creepersDestroyCore = config.getBoolean("creeper", CATEGORY_DESTRUCTION, false, "",
 				BASE_LANG + CATEGORY_DESTRUCTION + ".creeper");
+		// Advanced
+		config.setCategoryLanguageKey(CATEGORY_ADVANCED, BASE_LANG + CATEGORY_ADVANCED);
+		worldTypeSkyTreeDefault = config.getBoolean("WorldTypeSkyTree", CATEGORY_ADVANCED, false,
+				"", BASE_LANG + CATEGORY_ADVANCED + ".worldtypeskytree");
 		config.save();
 	}
 
@@ -88,6 +94,7 @@ public class Config {
 				.getChildElements());
 		categories.add(new ConfigElement(getConfig().getCategory(Configuration.CATEGORY_CLIENT)));
 		categories.add(new ConfigElement(getConfig().getCategory(CATEGORY_DESTRUCTION)));
+		categories.add(new ConfigElement(getConfig().getCategory(CATEGORY_ADVANCED)));
 		return categories;
 	}
 }

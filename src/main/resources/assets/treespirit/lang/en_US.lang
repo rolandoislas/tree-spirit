@@ -27,6 +27,11 @@ treespirit.config.destruction.skeleton.tooltip=Should skeletons try to destroy t
 treespirit.config.destruction.creeper=Creepers
 treespirit.config.destruction.creeper.tooltip=Should creepers try to destroy the core
 
+treespirit.config.advanced=Advanced
+treespirit.config.advanced.tooltip=Advanced User Settings
+treespirit.config.advanced.worldtypeskytree=Default Generator Sky Tree
+treespirit.config.advanced.worldtypeskytree.tooltip=Set's the default generator to Sky Tree on the world create screen
+
 itemGroup.treespirit=Tree Spirit
 
 item.treespirit.devtool.name=Dev Tool
@@ -64,3 +69,4 @@ treespirit.message.room_sealer_fail=Room is not valid.
 
 death.attack.tree_spirit=%s's tree has died.
 
+generator.treespirit.sky=Sky Tree
