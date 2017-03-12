@@ -1,6 +1,7 @@
 package com.rolandoislas.treespirit.block;
 
 import com.rolandoislas.treespirit.TreeSpirit;
+import com.rolandoislas.treespirit.registry.ModBlocks;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
 import net.minecraft.block.*;
 import net.minecraft.block.properties.PropertyEnum;
@@ -126,7 +127,7 @@ public class BlockMushroomBuilder extends BlockBush implements IGrowable {
 				.withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.ALL_STEM);
 		createChute(chuteHeight, chuteWidth, pos, worldIn, stem);
 		// Create air at the top of the stem
-		createPlatform(pos.up(chuteHeight - 1), (chuteWidth - 3) / 2, worldIn, Blocks.AIR.getDefaultState());
+		createPlatform(pos.up(chuteHeight - 1), chuteWidth - 2, worldIn, ModBlocks.AIR.getDefaultState());
 		// Create the head
 		IBlockState head = Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState();
 		if (rand.nextInt(2) == 0)
