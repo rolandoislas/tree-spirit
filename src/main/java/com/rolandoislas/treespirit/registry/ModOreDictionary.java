@@ -23,6 +23,7 @@ public class ModOreDictionary {
 		registerItem(ModItems.DOOR, "door");
 		registerItem(ModItems.DEV_TOOL, "utility");
 		registerItem(ModItems.CORE, "utility");
+		registerItem(ModItems.MUSHROOM_BUILDER, "utility");
 	}
 
 	private static void registerItem(Item itemIn, String name) {

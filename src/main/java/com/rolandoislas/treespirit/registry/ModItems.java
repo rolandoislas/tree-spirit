@@ -1,6 +1,7 @@
 package com.rolandoislas.treespirit.registry;
 
 import com.rolandoislas.treespirit.TreeSpirit;
+import com.rolandoislas.treespirit.block.EnumMushroomStructure;
 import com.rolandoislas.treespirit.block.EnumWood;
 import com.rolandoislas.treespirit.data.SubItem;
 import com.rolandoislas.treespirit.gui.renderer.ModItemColors;
@@ -34,6 +35,8 @@ public class ModItems {
 	public static final Item ROOM_SEALER = createItemBlock(ModBlocks.ROOM_SEALER).setMaxStackSize(1);
 	public static final Item DOOR = new ItemDoor(ModBlocks.DOOR).setUnlocalizedName(TreeSpirit.MODID + ".door")
 			.setRegistryName(TreeSpirit.MODID, "door").setCreativeTab(ModCreativeTabs.MAIN);
+	public static final Item MUSHROOM_BUILDER = createItemBlockWithSubtypes(ModBlocks.MUSHROOM_BUILDER,
+			EnumMushroomStructure.class, EnumMushroomStructure.MOB_SPAWNER.name()).setMaxStackSize(1);
 
 	private static Item createItemBlockWithSubtypes(Block block, final Class<? extends Enum> enumClass,
 													final String defaultEnumInstanceName) {
@@ -65,6 +68,7 @@ public class ModItems {
 		registerTexture(LIFE_EXTENDER);
 		registerTexture(ROOM_SEALER);
 		registerTexture(DOOR);
+		registerTexture(MUSHROOM_BUILDER);
 	}
 
 	private static void registerTexture(Item item) {
@@ -94,6 +98,7 @@ public class ModItems {
 		GameRegistry.register(LIFE_EXTENDER);
 		GameRegistry.register(ROOM_SEALER);
 		GameRegistry.register(DOOR);
+		GameRegistry.register(MUSHROOM_BUILDER);
 	}
 
 	public static void registerColors() {

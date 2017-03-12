@@ -131,10 +131,13 @@ public class BlockSpiritCore extends BlockRotatedPillar implements ITileEntityPr
 			return true;
 		if (!hand.equals(EnumHand.MAIN_HAND))
 			return false;
-		String owner = SpiritUtil.getOwnerId(worldIn, pos);
-		if (!owner.equals(InfoUtil.getPlayerUuid(playerIn)))
-			SpiritUtil.sendMessage(playerIn, Messages.CORE_NOT_OWNER);
-		else if (ItemStack.areItemsEqual(playerIn.getHeldItemMainhand(), ModItems.CORE.getDefaultInstance())){
+		// Check action
+		boolean isOwner = SpiritUtil.getOwnerId(worldIn, pos).equals(InfoUtil.getPlayerUuid(playerIn));
+		boolean hasCoreInHand = ItemStack.areItemsEqual(playerIn.getHeldItemMainhand(),
+				ModItems.CORE.getDefaultInstance());
+		boolean shiftingWithEmptyHand = playerIn.getHeldItemMainhand().isEmpty() && playerIn.isSneaking();
+		// Upgrade
+		if (hasCoreInHand && isOwner){
 			int level = SpiritUtil.upgradeCore(worldIn, pos);
 			if (level > -1) {
 				playerIn.getHeldItemMainhand().shrink(1);
@@ -142,8 +145,10 @@ public class BlockSpiritCore extends BlockRotatedPillar implements ITileEntityPr
 			}
 			else
 				SpiritUtil.sendMessage(playerIn, Messages.CORE_UPGRADE_FAIL, level + 1);
+			return true;
 		}
-		else if (playerIn.getHeldItemMainhand().isEmpty() && playerIn.isSneaking()) {
+		// Downgrade
+		else if (shiftingWithEmptyHand && isOwner) {
 			int level = SpiritUtil.downgradeCore(worldIn, pos);
 			if (level > -1) {
 				playerIn.inventory.addItemStackToInventory(new ItemStack(ModItems.CORE, 1, 0));
@@ -151,7 +156,15 @@ public class BlockSpiritCore extends BlockRotatedPillar implements ITileEntityPr
 			}
 			else
 				SpiritUtil.sendMessage(playerIn, Messages.CORE_DOWNGRADE_FAIL, level + 1);
+			return true;
 		}
-		return true;
+		// Player tried to up/downgrade a core that is not theirs
+		else if (!isOwner && (hasCoreInHand || shiftingWithEmptyHand)) {
+			SpiritUtil.sendMessage(playerIn, Messages.CORE_NOT_OWNER);
+			return true;
+		}
+		// Normal action
+		else
+			return false;
 	}
 }

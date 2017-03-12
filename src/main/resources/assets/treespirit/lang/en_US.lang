@@ -58,6 +58,7 @@ tile.treespirit.core.elder.name=Elder Tree Spirit Core
 tile.treespirit.core.dimension.name=Dimension Tree Spirit Core
 tile.treespirit.grass.name=Spirit Tree Grass
 tile.treespirit.room_sealer.name=Infused Mushroom
+tile.treespirit.mushroom_builder.mob_spawner.name=Mushroom Mob Spawner
 
 treespirit.message.core_placed_by_player=Silly player, cores are for trees.
 treespirit.message.elder_sapling_placed=Once this sapling grows %s, your fates will be intertwined.

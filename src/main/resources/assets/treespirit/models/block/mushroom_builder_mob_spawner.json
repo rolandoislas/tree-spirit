@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "treespirit:blocks/mushroom_builder_mob_spawner"
+  }
+}

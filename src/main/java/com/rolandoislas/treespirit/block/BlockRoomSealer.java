@@ -195,6 +195,11 @@ public class BlockRoomSealer extends BlockBush {
 	}
 
 	@Override
+	protected boolean canSustainBush(IBlockState state) {
+		return state.getBlock() == ModBlocks.LOG;
+	}
+
+	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		super.breakBlock(worldIn, pos, state);
 		if (worldIn.isRemote)

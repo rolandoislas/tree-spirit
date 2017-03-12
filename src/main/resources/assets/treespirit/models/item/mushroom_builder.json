@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "treespirit:blocks/mushroom_builder_mob_spawner"
+  }
+}

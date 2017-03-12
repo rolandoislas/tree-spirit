@@ -18,6 +18,8 @@ public class ModBlocks {
 	public static final Block CORE = new BlockSpiritCore();
 	public static final Block ROOM_SEALER = new BlockRoomSealer();
 	public static final Block DOOR = new BlockSpiritDoor();
+	public static final Block MUSHROOM_BUILDER = new BlockMushroomBuilder();
+	public static final Block AIR = new BlockSpiritAir();
 
 	public static void register() {
 		GameRegistry.register(SAPLING);
@@ -28,6 +30,8 @@ public class ModBlocks {
 		GameRegistry.register(GRASS);
 		GameRegistry.register(ROOM_SEALER);
 		GameRegistry.register(DOOR);
+		GameRegistry.register(MUSHROOM_BUILDER);
+		GameRegistry.register(AIR);
 	}
 
 	public static void registerColors() {

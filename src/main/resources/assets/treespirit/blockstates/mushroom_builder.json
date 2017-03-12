@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "stage=0,type=mob_spawner": { "model": "treespirit:mushroom_builder_mob_spawner" },
+    "stage=1,type=mob_spawner": { "model": "treespirit:mushroom_builder_mob_spawner" }
+  }
+}
