@@ -50,5 +50,8 @@ public class Recipes {
 		// Core
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.CORE, 1, 0),
 				"EEE", "EWE", "EEE", 'E', ModItems.ESSENCE, 'W', ModBlocks.LOG));
+		// Mushroom Builder
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.MUSHROOM_BUILDER, 1, 0),
+				ModItems.ROOM_SEALER, Items.WOODEN_SWORD));
 	}
 }

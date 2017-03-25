@@ -444,15 +444,17 @@ public class SpiritUtil {
 			}
 		}
 		// Give sapling
-		SpiritData spiritData = JsonUtil.getSpiritData();
-		SpiritWorldData world = spiritData.getWorld(InfoUtil.getWorldId(event.player.world));
-		SpiritPlayerInfo playerInfo = world.getPlayerInfo(InfoUtil.getPlayerUuid(event.player));
-		if (playerInfo != null)
-			return;
-		world.registerPlayerInfo(InfoUtil.getPlayerUuid(event.player));
-		JsonUtil.setSpiritData(spiritData);
-		event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.SAPLING, 1,
-				EnumWood.ELDER.getMeta()));
+		if (Config.giveSaplingOnSpawn) {
+			SpiritData spiritData = JsonUtil.getSpiritData();
+			SpiritWorldData world = spiritData.getWorld(InfoUtil.getWorldId(event.player.world));
+			SpiritPlayerInfo playerInfo = world.getPlayerInfo(InfoUtil.getPlayerUuid(event.player));
+			if (playerInfo != null)
+				return;
+			world.registerPlayerInfo(InfoUtil.getPlayerUuid(event.player));
+			JsonUtil.setSpiritData(spiritData);
+			event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.SAPLING, 1,
+					EnumWood.ELDER.getMeta()));
+		}
 	}
 
 	/**

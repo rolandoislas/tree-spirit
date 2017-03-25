@@ -35,6 +35,7 @@ public class Config {
 	public static boolean playerDeathDestroysCore;
 	public static boolean enableSkyTreeWorld;
 	public static boolean growCropsAroundPlayer;
+	public static boolean giveSaplingOnSpawn;
 
 	public static void setConfigFile(File configFile) {
 		config = new Configuration(configFile);
@@ -61,6 +62,8 @@ public class Config {
 						BASE_LANG + "general.corefeedsplayertype")) : EnumPlayerType.NONE;
 		growCropsAroundPlayer = config.getBoolean("GrowCropsAroundPlayer", Configuration.CATEGORY_GENERAL, false,
 				"", BASE_LANG + Configuration.CATEGORY_GENERAL + ".grow_crops_around_player");
+		giveSaplingOnSpawn = config.getBoolean("give_sapling_on_spawn", Configuration.CATEGORY_GENERAL,
+				false, "", BASE_LANG + "general.give_sapling_on_spawn");
 		// Client
 		config.setCategoryLanguageKey(Configuration.CATEGORY_CLIENT, BASE_LANG + "client");
 		deathWarningType = EnumDeathWarning.valueOf(config.getString(

@@ -14,6 +14,8 @@ treespirit.config.general.corefeedsplayertype=Core Feeds Players
 treespirit.config.general.corefeedsplayertype.tooltip=Type of player that the core will feed around it.
 treespirit.config.general.grow_crops_around_player=Grow Crops Around Player
 treespirit.config.general.grow_crops_around_player.tooltip=Grow crops around a player that has a core
+treespirit.config.general.give_sapling_on_spawn=Give Sapling on Spawn
+treespirit.config.general.give_sapling_on_spawn.tooltip=Give new players a sapling when they join a world for the first time
 
 treespirit.config.client=Client
 treespirit.config.client.tooltip=Client Settings
