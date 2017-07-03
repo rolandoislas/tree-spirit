@@ -20,5 +20,10 @@ public class Messages {
 	public static final String MOB_ATTACKING_CORE = PREFIX + "mob_attacking_core";
 	public static final String ROOM_SEALER_PASS = PREFIX + "room_sealer_pass";
 	public static final String ROOM_SEALER_FAIL = PREFIX + "room_sealer_fail";
+	public static final String CORE_NOT_OWNER = PREFIX + "core_not_owned";
+	public static final String CORE_UPGRADE_PASS = PREFIX + "core_upgrade_pass";
+	public static final String CORE_UPGRADE_FAIL = PREFIX + "core_upgrade_fail";
+	public static final String CORE_DOWNGRADE_PASS = PREFIX + "core_downgrade_pass";
+	public static final String CORE_DOWNGRADE_FAIL = PREFIX + "core_downgrade_fail";
 	public static String NORMAL_SAPLING_PLANT_FAIL = PREFIX + "normal_sapling_plant_fail";
 }

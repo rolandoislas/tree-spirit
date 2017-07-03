@@ -1,10 +1,16 @@
 package com.rolandoislas.treespirit.event;
 
+import com.rolandoislas.treespirit.data.Config;
 import com.rolandoislas.treespirit.gui.renderer.CoreCountdownRenderer;
+import com.rolandoislas.treespirit.registry.WorldTypes;
+import net.minecraft.client.gui.GuiCreateWorld;
+import net.minecraft.client.gui.GuiWorldSelection;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -21,5 +27,12 @@ public class EventHandlerClient {
 		if (event.side.equals(Side.SERVER))
 			return;
 		CoreCountdownRenderer.playerTickEvent(event);
+	}
+
+	@SubscribeEvent(priority =  EventPriority.NORMAL)
+	public void guiOpenEvent(GuiOpenEvent event) {
+		if (WorldTypes.skyTree != null && Config.worldTypeSkyTreeDefault && event.getGui() instanceof GuiCreateWorld)
+			ReflectionHelper.setPrivateValue(GuiCreateWorld.class, (GuiCreateWorld) event.getGui(),
+					WorldTypes.skyTree.getWorldTypeID(), "field_146331_K", "selectedIndex");
 	}
 }

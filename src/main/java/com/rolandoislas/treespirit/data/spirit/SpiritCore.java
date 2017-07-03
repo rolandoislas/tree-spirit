@@ -10,9 +10,10 @@ import java.util.Arrays;
  * Created by Rolando on 2/28/2017.
  */
 public class SpiritCore {
-	final Integer dimension;
-	final int[] pos;
-	final String playerUid;
+	private final Integer dimension;
+	private final int[] pos;
+	private final String playerUid;
+	private int level;
 
 	public SpiritCore(World worldIn, BlockPos pos, String playerUuid) {
 		this.dimension = worldIn != null ? worldIn.provider.getDimension() : null;
@@ -68,5 +69,17 @@ public class SpiritCore {
 				Arrays.equals(core.pos, ((SpiritCore) obj).pos))
 			return true;
 		return false;
+	}
+
+	public boolean isEmpty() {
+		return getDimension() == null || getPos() == null || getPlayerId() == null;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

@@ -19,6 +19,7 @@ import static com.rolandoislas.treespirit.TreeSpirit.MODID;
 public class Config {
 	private static final String BASE_LANG = MODID + ".config.";
 	private static final String CATEGORY_DESTRUCTION = "destruction";
+	private static final String CATEGORY_ADVANCED = "advanced";
 	private static Configuration config;
 	public static int deathTime;
 	public static boolean randomTicksLog;
@@ -30,6 +31,11 @@ public class Config {
 	public static boolean creepersDestroyCore;
 	public static boolean onlyKillNormal;
 	public static EnumPlayerType coreFeedsPlayerType;
+	public static boolean worldTypeSkyTreeDefault;
+	public static boolean playerDeathDestroysCore;
+	public static boolean enableSkyTreeWorld;
+	public static boolean growCropsAroundPlayer;
+	public static boolean giveSaplingOnSpawn;
 
 	public static void setConfigFile(File configFile) {
 		config = new Configuration(configFile);
@@ -54,6 +60,10 @@ public class Config {
 						EnumPlayerType.TREE_SPIRIT.name(), "", new String[]{EnumPlayerType.NORMAL.name(),
 								EnumPlayerType.TREE_SPIRIT.name(), EnumPlayerType.NONE.name()},
 						BASE_LANG + "general.corefeedsplayertype")) : EnumPlayerType.NONE;
+		growCropsAroundPlayer = config.getBoolean("GrowCropsAroundPlayer", Configuration.CATEGORY_GENERAL, false,
+				"", BASE_LANG + Configuration.CATEGORY_GENERAL + ".grow_crops_around_player");
+		giveSaplingOnSpawn = config.getBoolean("give_sapling_on_spawn", Configuration.CATEGORY_GENERAL,
+				false, "", BASE_LANG + "general.give_sapling_on_spawn");
 		// Client
 		config.setCategoryLanguageKey(Configuration.CATEGORY_CLIENT, BASE_LANG + "client");
 		deathWarningType = EnumDeathWarning.valueOf(config.getString(
@@ -68,6 +78,14 @@ public class Config {
 				BASE_LANG + CATEGORY_DESTRUCTION + ".skeleton");
 		creepersDestroyCore = config.getBoolean("creeper", CATEGORY_DESTRUCTION, false, "",
 				BASE_LANG + CATEGORY_DESTRUCTION + ".creeper");
+		// Advanced
+		config.setCategoryLanguageKey(CATEGORY_ADVANCED, BASE_LANG + CATEGORY_ADVANCED);
+		worldTypeSkyTreeDefault = config.getBoolean("WorldTypeSkyTree", CATEGORY_ADVANCED, false,
+				"", BASE_LANG + CATEGORY_ADVANCED + ".worldtypeskytree");
+		playerDeathDestroysCore = config.getBoolean("PlayerDeathDestroysCore", CATEGORY_ADVANCED, true,
+				"", BASE_LANG + CATEGORY_ADVANCED + ".player_death_destroys_core");
+		enableSkyTreeWorld = config.getBoolean("EnableWorldTypeSkyTree", CATEGORY_ADVANCED, false,
+				"", BASE_LANG + CATEGORY_ADVANCED + ".enable_world_type_sky_tree");
 		config.save();
 	}
 
@@ -88,6 +106,7 @@ public class Config {
 				.getChildElements());
 		categories.add(new ConfigElement(getConfig().getCategory(Configuration.CATEGORY_CLIENT)));
 		categories.add(new ConfigElement(getConfig().getCategory(CATEGORY_DESTRUCTION)));
+		categories.add(new ConfigElement(getConfig().getCategory(CATEGORY_ADVANCED)));
 		return categories;
 	}
 }
