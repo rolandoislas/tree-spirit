@@ -25,8 +25,8 @@ public class TileEntitySpiritCore extends TileEntity implements ITickable {
 				int x = pos.getX();
 				int y = pos.getY();
 				int z = pos.getZ();
-				AxisAlignedBB axisalignedbb = new AxisAlignedBB(x, y, z, x + 1, y + 1, z + 1).expandXyz(10)
-						.addCoord(0, world.getHeight(), 0);
+				AxisAlignedBB axisalignedbb = new AxisAlignedBB(x, y, z, x + 1, y + 1, z + 1)
+						.expand(10, world.getHeight(), 10);
 				List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
 
 				for (EntityPlayer entityplayer : list) {

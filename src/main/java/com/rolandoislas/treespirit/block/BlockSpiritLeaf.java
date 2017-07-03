@@ -137,11 +137,6 @@ public class BlockSpiritLeaf extends Block implements IShearable {
 	}
 
 	@Override
-	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
-		return false;
-	}
-
-	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		if (worldIn.isRemote)
 			return;

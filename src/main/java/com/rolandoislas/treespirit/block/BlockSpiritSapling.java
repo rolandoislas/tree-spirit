@@ -17,7 +17,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -50,9 +49,9 @@ public class BlockSpiritSapling extends BlockBush implements IGrowable {
 	}
 
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
 		for (EnumWood sapling : EnumWood.values())
-			list.add(new ItemStack(itemIn, 1, sapling.getMeta()));
+			list.add(new ItemStack(this, 1, sapling.getMeta()));
 	}
 
 	@Override

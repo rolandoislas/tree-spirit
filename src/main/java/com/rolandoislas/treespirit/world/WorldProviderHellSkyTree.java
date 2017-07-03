@@ -3,7 +3,7 @@ package com.rolandoislas.treespirit.world;
 import com.rolandoislas.treespirit.registry.WorldTypes;
 import com.rolandoislas.treespirit.world.gen.ChunkProviderSkyTree;
 import net.minecraft.world.WorldProviderHell;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 
 /**
  * Created by Rolando on 3/8/2017.

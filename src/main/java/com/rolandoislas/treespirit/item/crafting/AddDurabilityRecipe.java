@@ -6,8 +6,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by Rolando on 3/3/2017.
@@ -16,6 +19,7 @@ public class AddDurabilityRecipe implements IRecipe {
 	private final Item returnItem;
 	private final Item durabilityIncreaseItem;
 	private final float percentIncrease;
+	private ResourceLocation regName;
 
 	public AddDurabilityRecipe(Item returnItem, Item durabilityIncreaseItem, float percentIncrease) {
 		this.returnItem = returnItem;
@@ -58,8 +62,8 @@ public class AddDurabilityRecipe implements IRecipe {
 	}
 
 	@Override
-	public int getRecipeSize() {
-		return 2;
+	public boolean canFit(int width, int height) {
+		return width <= 2 && height <= 2;
 	}
 
 	@Override
@@ -70,5 +74,27 @@ public class AddDurabilityRecipe implements IRecipe {
 	@Override
 	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
 		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
+	}
+
+	@Override
+	public IRecipe setRegistryName(ResourceLocation name) {
+		this.regName = name;
+		return this;
+	}
+
+	@Nullable
+	@Override
+	public ResourceLocation getRegistryName() {
+		return regName;
+	}
+
+	@Override
+	public Class<IRecipe> getRegistryType() {
+		return null;
+	}
+
+	public IRecipe setRegistryName(String name) {
+		this.setRegistryName(new ResourceLocation(name));
+		return this;
 	}
 }

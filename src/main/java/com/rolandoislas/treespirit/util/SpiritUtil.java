@@ -244,7 +244,7 @@ public class SpiritUtil {
 				.getRoomSealers(InfoUtil.getPlayerUuid(player));
 		for (SpiritRoomSealer roomSealer : roomSealers)
 			if (roomSealer.getDimension() == player.world.provider.getDimension() && roomSealer.isSealed() &&
-					player.getEntityBoundingBox().intersectsWith(roomSealer.getDimensions()))
+					player.getEntityBoundingBox().intersects(roomSealer.getDimensions()))
 				return true;
 		return false;
 	}
@@ -394,7 +394,7 @@ public class SpiritUtil {
 		if (event.getEntity().world.isRemote)
 			return;
 		int chance = 10;
-		if (!(event.getSource().getEntity() instanceof EntityPlayer))
+		if (!(event.getSource().getTrueSource() instanceof EntityPlayer))
 			chance = 100;
 		chance -= event.getLootingLevel() * chance / 10;
 		if (event.getEntity() instanceof EntityMob && event.getEntity().world.rand.nextInt(chance) == 0) {
@@ -403,7 +403,7 @@ public class SpiritUtil {
 						event.getEntity().posX,
 						event.getEntity().posY,
 						event.getEntity().posZ);
-				entityItem.setEntityItemStack(ModItems.ESSENCE.getDefaultInstance());
+				entityItem.setItem(ModItems.ESSENCE.getDefaultInstance());
 				event.getDrops().add(entityItem);
 			}
 		}

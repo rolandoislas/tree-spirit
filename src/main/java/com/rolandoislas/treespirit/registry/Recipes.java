@@ -1,12 +1,14 @@
 package com.rolandoislas.treespirit.registry;
 
+import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.block.EnumWood;
 import com.rolandoislas.treespirit.item.crafting.AddDurabilityRecipe;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -15,43 +17,63 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
  */
 public class Recipes {
 	public static void register() {
+		ResourceLocation name = new ResourceLocation(TreeSpirit.MODID);
 		// Planks
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.PLANK, 4), "treeSpiritLog"));
+		ForgeRegistries.RECIPES.register(
+				new ShapelessOreRecipe(name, new ItemStack(ModItems.PLANK, 4), "treeSpiritLog")
+						.setRegistryName("planks"));
 		// Normal sapling
-		GameRegistry.addRecipe(new ShapelessOreRecipe(ModItems.SAPLING, "treeSapling", "treeSpiritEssence"));
+		ForgeRegistries.RECIPES.register(
+				new ShapelessOreRecipe(name, ModItems.SAPLING, "treeSapling", "treeSpiritEssence")
+						.setRegistryName("sapling"));
 		// Elder sapling
-		GameRegistry.addRecipe(new ShapelessOreRecipe(
+		ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(name,
 				new ItemStack(ModItems.SAPLING, 1, EnumWood.ELDER.getMeta()),
 				"treeSpiritSaplingNormal", "treeSpiritEssence", "treeSpiritEssence", "treeSpiritEssence",
 				"treeSpiritEssence", "treeSpiritEssence", "treeSpiritEssence", "treeSpiritEssence",
-				"treeSpiritEssence"));
+				"treeSpiritEssence")
+				.setRegistryName("sapling.elder"));
 		// Dimension Sapling
-		GameRegistry.addRecipe(new ShapelessOreRecipe(
+		ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(name,
 				new ItemStack(ModItems.SAPLING, 1, EnumWood.DIMENSION.getMeta()),
 				"treeSpiritSaplingNormal",
 				"treeSpiritEssence", "treeSpiritEssence", "treeSpiritEssence", "treeSpiritEssence",
-				Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL));
+				Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL, Items.ENDER_PEARL)
+				.setRegistryName("sapling.dimension"));
 		// Grass
-		GameRegistry.addRecipe(new ShapelessOreRecipe(ModItems.GRASS, "dirt", "treeSpiritEssence",
-				"treeSpiritEssence", "treeSpiritEssence", "treeSpiritEssence"));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(ModItems.GRASS, Blocks.GRASS, "treeSpiritEssence"));
+		ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(name, ModItems.GRASS, "dirt", "treeSpiritEssence",
+				"treeSpiritEssence", "treeSpiritEssence", "treeSpiritEssence")
+				.setRegistryName("grass...tastes.bad"));
+		ForgeRegistries.RECIPES.register(
+				new ShapelessOreRecipe(name, ModItems.GRASS, Blocks.GRASS, "treeSpiritEssence")
+						.setRegistryName("grass"));
 		// Life Extender
-		GameRegistry.addRecipe(new AddDurabilityRecipe(ModItems.LIFE_EXTENDER, ModItems.ESSENCE, .1f));
+		ForgeRegistries.RECIPES.register(
+				new AddDurabilityRecipe(ModItems.LIFE_EXTENDER, ModItems.ESSENCE, .1f)
+						.setRegistryName("life.extender.repair"));
 		ItemStack lifeExtender = new ItemStack(ModItems.LIFE_EXTENDER);
 		lifeExtender.setItemDamage(lifeExtender.getMaxDamage());
-		GameRegistry.addRecipe(new ShapelessOreRecipe(lifeExtender, ModItems.ESSENCE, Items.PAPER,
-				new ItemStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage())));
+		ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(name, lifeExtender, ModItems.ESSENCE, Items.PAPER,
+				new ItemStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage()))
+				.setRegistryName("life.extender"));
 		// Room Sealer
-		GameRegistry.addRecipe(new ShapelessOreRecipe(ModItems.ROOM_SEALER, Blocks.BROWN_MUSHROOM,
-				ModItems.ESSENCE));
+		ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(name, ModItems.ROOM_SEALER, Blocks.BROWN_MUSHROOM,
+				ModItems.ESSENCE)
+				.setRegistryName("room.sealer"));
 		// Door
-		GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.DOOR, "WW ", "WW ", "WW ", 'W', ModBlocks.PLANK));
-		GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.DOOR, " WW", " WW", " WW", 'W', ModBlocks.PLANK));
+		ForgeRegistries.RECIPES.register(
+				new ShapedOreRecipe(name, ModItems.DOOR, "WW ", "WW ", "WW ", 'W', ModBlocks.PLANK)
+						.setRegistryName("door"));
+		ForgeRegistries.RECIPES.register(
+				new ShapedOreRecipe(name, ModItems.DOOR, " WW", " WW", " WW", 'W', ModBlocks.PLANK)
+						.setRegistryName("door.mirror"));
 		// Core
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModItems.CORE, 1, 0),
-				"EEE", "EWE", "EEE", 'E', ModItems.ESSENCE, 'W', ModBlocks.LOG));
+		ForgeRegistries.RECIPES.register(new ShapedOreRecipe(name, new ItemStack(ModItems.CORE, 1, 0),
+				"EEE", "EWE", "EEE", 'E', ModItems.ESSENCE, 'W', ModBlocks.LOG)
+				.setRegistryName("core"));
 		// Mushroom Builder
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.MUSHROOM_BUILDER, 1, 0),
-				ModItems.ROOM_SEALER, Items.WOODEN_SWORD));
+		ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(name, new ItemStack(ModItems.MUSHROOM_BUILDER, 1, 0),
+				ModItems.ROOM_SEALER, Items.WOODEN_SWORD)
+				.setRegistryName("mushroom.builder.mob.spawner"));
 	}
 }

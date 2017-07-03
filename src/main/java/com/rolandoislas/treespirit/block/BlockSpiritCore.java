@@ -2,12 +2,10 @@ package com.rolandoislas.treespirit.block;
 
 import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.data.Messages;
-import com.rolandoislas.treespirit.data.spirit.SpiritCore;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
 import com.rolandoislas.treespirit.registry.ModItems;
 import com.rolandoislas.treespirit.tileentity.TileEntitySpiritCore;
 import com.rolandoislas.treespirit.util.InfoUtil;
-import com.rolandoislas.treespirit.util.JsonUtil;
 import com.rolandoislas.treespirit.util.SpiritUtil;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.ITileEntityProvider;
@@ -18,7 +16,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -56,9 +53,9 @@ public class BlockSpiritCore extends BlockRotatedPillar implements ITileEntityPr
 	}
 
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
 		for (EnumWood sapling : EnumWood.values())
-			list.add(new ItemStack(itemIn, 1, sapling.getMeta()));
+			list.add(new ItemStack(this, 1, sapling.getMeta()));
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class ModOreDictionary {
 
 	private static void registerItem(Item itemIn, String name) {
 		NonNullList<ItemStack> subItems = NonNullList.create();
-		itemIn.getSubItems(itemIn, ModCreativeTabs.MAIN, subItems);
+		itemIn.getSubItems(ModCreativeTabs.MAIN, subItems);
 		for (ItemStack item : subItems) {
 			OreDictionary.registerOre(name, item);
 			String subName = getOreDictNameFromItem(item);
