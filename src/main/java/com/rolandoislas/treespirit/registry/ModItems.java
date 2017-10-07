@@ -4,12 +4,10 @@ import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.block.EnumMushroomStructure;
 import com.rolandoislas.treespirit.block.EnumWood;
 import com.rolandoislas.treespirit.data.SubItem;
-import com.rolandoislas.treespirit.gui.renderer.ModItemColors;
 import com.rolandoislas.treespirit.item.ItemDevTool;
 import com.rolandoislas.treespirit.item.ItemEssence;
 import com.rolandoislas.treespirit.item.ItemLifeExtender;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
@@ -99,9 +97,5 @@ public class ModItems {
 		ForgeRegistries.ITEMS.register(ROOM_SEALER);
 		ForgeRegistries.ITEMS.register(DOOR);
 		ForgeRegistries.ITEMS.register(MUSHROOM_BUILDER);
-	}
-
-	public static void registerColors() {
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ModItemColors(), GRASS);
 	}
 }

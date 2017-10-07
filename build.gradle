@@ -21,9 +21,10 @@ group= "com.rolandoislas.treespirit" // http://maven.apache.org/guides/mini/guid
 archivesBaseName = "treespirit"
 
 minecraft {
-    version = "1.12-14.21.1.2387"
+    version = "1.12.2-14.23.0.2491"
     runDir = "run"
     mappings = "snapshot_20170626"
+    replace("@VERSION@", version)
 }
 
 if (ext.tag) {
