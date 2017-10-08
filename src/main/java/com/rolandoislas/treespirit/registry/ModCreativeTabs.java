@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 public class ModCreativeTabs {
 	public static final CreativeTabs MAIN = new CreativeTabs(CreativeTabs.getNextID(), TreeSpirit.MODID) {
 		public ItemStack getTabIconItem() {
-			return ModItems.DEV_TOOL.getDefaultInstance();
+			return new ItemStack(ModItems.DEV_TOOL);
 		}
 	};
 }

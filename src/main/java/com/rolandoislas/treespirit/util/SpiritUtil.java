@@ -403,7 +403,7 @@ public class SpiritUtil {
 						event.getEntity().posX,
 						event.getEntity().posY,
 						event.getEntity().posZ);
-				entityItem.setItem(ModItems.ESSENCE.getDefaultInstance());
+				entityItem.setItem(new ItemStack(ModItems.ESSENCE));
 				event.getDrops().add(entityItem);
 			}
 		}
@@ -420,7 +420,7 @@ public class SpiritUtil {
 		if ((event.getState().getBlock() == ModBlocks.LEAF || event.getState().getBlock() == Blocks.LEAVES ||
 				event.getState().getBlock() == Blocks.LEAVES2) &&
 				event.getWorld().rand.nextInt(chance) == 0)
-			event.getDrops().add(ModItems.ESSENCE.getDefaultInstance());
+			event.getDrops().add(new ItemStack(ModItems.ESSENCE));
 	}
 
 	/**

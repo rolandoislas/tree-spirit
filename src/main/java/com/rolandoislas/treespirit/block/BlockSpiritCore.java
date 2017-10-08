@@ -131,7 +131,7 @@ public class BlockSpiritCore extends BlockRotatedPillar implements ITileEntityPr
 		// Check action
 		boolean isOwner = SpiritUtil.getOwnerId(worldIn, pos).equals(InfoUtil.getPlayerUuid(playerIn));
 		boolean hasCoreInHand = ItemStack.areItemsEqual(playerIn.getHeldItemMainhand(),
-				ModItems.CORE.getDefaultInstance());
+				new ItemStack(ModItems.CORE));
 		boolean shiftingWithEmptyHand = playerIn.getHeldItemMainhand().isEmpty() && playerIn.isSneaking();
 		// Upgrade
 		if (hasCoreInHand && isOwner){

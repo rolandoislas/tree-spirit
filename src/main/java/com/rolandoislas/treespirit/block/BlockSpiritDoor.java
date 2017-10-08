@@ -32,13 +32,13 @@ public class BlockSpiritDoor extends BlockDoor {
 
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
-		return ModItems.DOOR.getDefaultInstance();
+		return new ItemStack(ModItems.DOOR);
 	}
 
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(ModItems.DOOR.getDefaultInstance());
+		drops.add(new ItemStack(ModItems.DOOR));
 		return drops;
 	}
 }
