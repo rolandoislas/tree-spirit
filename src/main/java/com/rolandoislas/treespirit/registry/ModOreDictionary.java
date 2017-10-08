@@ -1,9 +1,7 @@
 package com.rolandoislas.treespirit.registry;
 
-import com.rolandoislas.treespirit.TreeSpirit;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
@@ -27,14 +25,8 @@ public class ModOreDictionary {
 	}
 
 	private static void registerItem(Item itemIn, String name) {
-		NonNullList<ItemStack> subItems = NonNullList.create();
-		itemIn.getSubItems(itemIn, ModCreativeTabs.MAIN, subItems);
-		for (ItemStack item : subItems) {
-			OreDictionary.registerOre(name, item);
-			String subName = getOreDictNameFromItem(item);
-			OreDictionary.registerOre(subName, item);
-			TreeSpirit.logger.debug("Registered Ore Dict Name: " + subName);
-		}
+		OreDictionary.registerOre(name, itemIn);
+		OreDictionary.registerOre(getOreDictNameFromItem(new ItemStack(itemIn)), itemIn);
 	}
 
 	private static String getOreDictNameFromItem(ItemStack item) {

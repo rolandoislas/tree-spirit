@@ -54,7 +54,7 @@ public class AddDurabilityRecipe implements IRecipe {
 				return slotItem;
 			}
 		}
-		return returnItem.getDefaultInstance();
+		return new ItemStack(returnItem);
 	}
 
 	@Override

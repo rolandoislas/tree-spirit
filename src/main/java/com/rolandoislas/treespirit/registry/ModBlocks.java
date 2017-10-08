@@ -1,9 +1,7 @@
 package com.rolandoislas.treespirit.registry;
 
 import com.rolandoislas.treespirit.block.*;
-import com.rolandoislas.treespirit.gui.renderer.ModBlockColors;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -32,10 +30,5 @@ public class ModBlocks {
 		GameRegistry.register(DOOR);
 		GameRegistry.register(MUSHROOM_BUILDER);
 		GameRegistry.register(AIR);
-	}
-
-	public static void registerColors() {
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new ModBlockColors(),
-				GRASS);
 	}
 }
