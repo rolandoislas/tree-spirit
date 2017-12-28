@@ -81,6 +81,7 @@ treespirit.message.core_upgrade_fail=This core cannot be upgraded.
 treespirit.message.core_downgrade_pass=Core downgraded. Its radius is now %d.
 treespirit.message.core_downgrade_fail=This core cannot be downgraded.
 
-death.attack.tree_spirit=%s's tree has died.
+death.attack.treespirit.tree_spirit=%s's tree has died.
+death.attack.treespirit.tree_spirit_core_not_destroyed=%s was killed for neglecting their tree.
 
 generator.treespirit.sky=Sky Tree
