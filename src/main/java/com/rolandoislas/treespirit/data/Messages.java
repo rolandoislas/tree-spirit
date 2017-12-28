@@ -9,7 +9,9 @@ public class Messages {
 	private static final String PREFIX = TreeSpirit.MODID + ".message.";
 	public static final String CORE_PLACED_BY_PLAYER = PREFIX + "core_placed_by_player";
 	public static final String ELDER_SAPLING_PLACED = PREFIX + "elder_sapling_placed";
-	public static final String PLAYER_DIED = "death.attack.tree_spirit";
+	public static final String PLAYER_DIED = "death.attack.treespirit.tree_spirit";
+	public static final String PLAYER_DIED_CORE_NOT_DESTROYED =
+			"death.attack.treespirit.tree_spirit_core_not_destroyed";
 	public static final String CORE_REGISTERED = PREFIX + "core_registered";
 	public static final String CHUNK_LOAD_ERROR = PREFIX + "chunk_load_error";
 	public static final String DIMENSION_SAPLING_PLACED = PREFIX + "dimension_sapling_placed";

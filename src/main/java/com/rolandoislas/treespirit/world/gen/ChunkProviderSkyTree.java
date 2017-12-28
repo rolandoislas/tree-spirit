@@ -9,8 +9,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEndDecorator;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.chunk.IChunkGenerator;
-import net.minecraft.world.gen.ChunkProviderEnd;
+import net.minecraft.world.gen.ChunkGeneratorEnd;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenSpikes;
 import net.minecraft.world.gen.structure.MapGenEndCity;
 import net.minecraft.world.gen.structure.MapGenNetherBridge;
@@ -25,14 +25,12 @@ import java.util.List;
  */
 public class ChunkProviderSkyTree implements IChunkGenerator {
 	private final World world;
-	private final String generatorOptions;
 	private MapGenNetherBridge genNetherBridge;
 	private WorldGenSpikes spikes;
 	private MapGenEndCity endCityGen;
 
 	public ChunkProviderSkyTree(World world, String generatorOptions) {
 		this.world = world;
-		this.generatorOptions = generatorOptions;
 		switch (world.provider.getDimensionType()) {
 			case NETHER:
 				genNetherBridge = (MapGenNetherBridge) TerrainGen.getModdedMapGen(new MapGenNetherBridge(),
@@ -40,14 +38,14 @@ public class ChunkProviderSkyTree implements IChunkGenerator {
 				break;
 			case THE_END:
 				spikes = new WorldGenSpikes();
-				endCityGen = new MapGenEndCity(new ChunkProviderEnd(world, false, world.getSeed(),
+				endCityGen = new MapGenEndCity(new ChunkGeneratorEnd(world, false, world.getSeed(),
 						world.getSpawnPoint()));
 				break;
 		}
 	}
 
 	@Override
-	public Chunk provideChunk(int x, int z) {
+	public Chunk generateChunk(int x, int z) {
 		Chunk chunk = new Chunk(this.world, x, z);
 		switch (world.provider.getDimensionType()) {
 			case NETHER:
@@ -111,12 +109,17 @@ public class ChunkProviderSkyTree implements IChunkGenerator {
 
 	@Nullable
 	@Override
-	public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos position, boolean p_180513_4_) {
+	public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored) {
 		return null;
 	}
 
 	@Override
 	public void recreateStructures(Chunk chunkIn, int x, int z) {
 
+	}
+
+	@Override
+	public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos) {
+		return false;
 	}
 }

@@ -3,10 +3,12 @@ package com.rolandoislas.treespirit.item;
 import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ public class ItemLifeExtender extends Item {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		String prefix = getUnlocalizedName(stack);
 		tooltip.add(I18n.format(prefix + ".lore"));
 		int totalSeconds = (stack.getMaxDamage() - stack.getItemDamage()) / TICKS_PER_SECOND;

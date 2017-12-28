@@ -4,18 +4,16 @@ import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.block.EnumMushroomStructure;
 import com.rolandoislas.treespirit.block.EnumWood;
 import com.rolandoislas.treespirit.data.SubItem;
-import com.rolandoislas.treespirit.gui.renderer.ModItemColors;
 import com.rolandoislas.treespirit.item.ItemDevTool;
 import com.rolandoislas.treespirit.item.ItemEssence;
 import com.rolandoislas.treespirit.item.ItemLifeExtender;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * Created by Rolando on 2/23/2017.
@@ -73,7 +71,7 @@ public class ModItems {
 
 	private static void registerTexture(Item item) {
 		NonNullList<ItemStack> subItems = NonNullList.create();
-		item.getSubItems(item, ModCreativeTabs.MAIN, subItems);
+		item.getSubItems(ModCreativeTabs.MAIN, subItems);
 		for (ItemStack subItem : subItems) {
 			ResourceLocation registryName = subItem.getItem().getRegistryName();
 			String[] split = subItem.getUnlocalizedName().split("\\.");
@@ -87,21 +85,17 @@ public class ModItems {
 	}
 
 	public static void register() {
-		GameRegistry.register(DEV_TOOL);
-		GameRegistry.register(ESSENCE);
-		GameRegistry.register(LEAF);
-		GameRegistry.register(LOG);
-		GameRegistry.register(PLANK);
-		GameRegistry.register(SAPLING);
-		GameRegistry.register(CORE);
-		GameRegistry.register(GRASS);
-		GameRegistry.register(LIFE_EXTENDER);
-		GameRegistry.register(ROOM_SEALER);
-		GameRegistry.register(DOOR);
-		GameRegistry.register(MUSHROOM_BUILDER);
-	}
-
-	public static void registerColors() {
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ModItemColors(), GRASS);
+		ForgeRegistries.ITEMS.register(DEV_TOOL);
+		ForgeRegistries.ITEMS.register(ESSENCE);
+		ForgeRegistries.ITEMS.register(LEAF);
+		ForgeRegistries.ITEMS.register(LOG);
+		ForgeRegistries.ITEMS.register(PLANK);
+		ForgeRegistries.ITEMS.register(SAPLING);
+		ForgeRegistries.ITEMS.register(CORE);
+		ForgeRegistries.ITEMS.register(GRASS);
+		ForgeRegistries.ITEMS.register(LIFE_EXTENDER);
+		ForgeRegistries.ITEMS.register(ROOM_SEALER);
+		ForgeRegistries.ITEMS.register(DOOR);
+		ForgeRegistries.ITEMS.register(MUSHROOM_BUILDER);
 	}
 }

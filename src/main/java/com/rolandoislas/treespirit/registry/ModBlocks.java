@@ -1,10 +1,8 @@
 package com.rolandoislas.treespirit.registry;
 
 import com.rolandoislas.treespirit.block.*;
-import com.rolandoislas.treespirit.gui.renderer.ModBlockColors;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * Created by Rolando on 2/27/2017.
@@ -22,20 +20,15 @@ public class ModBlocks {
 	public static final Block AIR = new BlockSpiritAir();
 
 	public static void register() {
-		GameRegistry.register(SAPLING);
-		GameRegistry.register(LOG);
-		GameRegistry.register(LEAF);
-		GameRegistry.register(PLANK);
-		GameRegistry.register(CORE);
-		GameRegistry.register(GRASS);
-		GameRegistry.register(ROOM_SEALER);
-		GameRegistry.register(DOOR);
-		GameRegistry.register(MUSHROOM_BUILDER);
-		GameRegistry.register(AIR);
-	}
-
-	public static void registerColors() {
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new ModBlockColors(),
-				GRASS);
+		ForgeRegistries.BLOCKS.register(SAPLING);
+		ForgeRegistries.BLOCKS.register(LOG);
+		ForgeRegistries.BLOCKS.register(LEAF);
+		ForgeRegistries.BLOCKS.register(PLANK);
+		ForgeRegistries.BLOCKS.register(CORE);
+		ForgeRegistries.BLOCKS.register(GRASS);
+		ForgeRegistries.BLOCKS.register(ROOM_SEALER);
+		ForgeRegistries.BLOCKS.register(DOOR);
+		ForgeRegistries.BLOCKS.register(MUSHROOM_BUILDER);
+		ForgeRegistries.BLOCKS.register(AIR);
 	}
 }
