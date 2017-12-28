@@ -40,8 +40,12 @@ import java.util.ArrayList;
  * Created by Rolando on 2/28/2017.
  */
 public class SpiritUtil {
-	private static final DamageSource DAMAGE_TREE_SPIRIT = new DamageSource("tree_spirit")
-			.setDamageBypassesArmor().setDamageAllowedInCreativeMode();
+	private static final DamageSource DAMAGE_TREE_SPIRIT =
+			new DamageSource(TreeSpirit.MODID + ".tree_spirit")
+				.setDamageBypassesArmor().setDamageAllowedInCreativeMode();
+	private static final DamageSource DAMAGE_TREE_SPIRIT_CORE_NOT_DESTROYED =
+			new DamageSource(TreeSpirit.MODID + ".tree_spirit_core_not_destroyed")
+				.setDamageBypassesArmor().setDamageAllowedInCreativeMode();
 	private static ArrayList<DeathTimer> deathTimers = new ArrayList<DeathTimer>();
 
 	/**
@@ -112,7 +116,7 @@ public class SpiritUtil {
 		if (core.getDimension() == null || core.getPos() == null)
 			return;
 		EntityPlayer player = WorldUtil.getPlayer(core.getPlayerId());
-		killPlayer(player);
+		killPlayer(player, true);
 		// Reset
 		World world = WorldUtil.getWorldWithLoadedChunk(worldIn, pos, core.getDimension());
 		if (world == null)
@@ -142,9 +146,13 @@ public class SpiritUtil {
 			return;
 		player.world.provider.setDimension(core.getDimension());
 		// Mimic server death message
-		if (event.getSource() != SpiritUtil.DAMAGE_TREE_SPIRIT)
+		if (Config.playerDeathDestroysCore &&
+				event.getSource() != SpiritUtil.DAMAGE_TREE_SPIRIT &&
+				event.getSource() != SpiritUtil.DAMAGE_TREE_SPIRIT_CORE_NOT_DESTROYED)
 			for (EntityPlayer entityPlayer : player.world.playerEntities)
-				sendMessage(entityPlayer, Messages.PLAYER_DIED, player.getDisplayName());
+				sendMessage(entityPlayer,
+						Config.playerDeathDestroysCore ? Messages.PLAYER_DIED : Messages.PLAYER_DIED_CORE_NOT_DESTROYED,
+						player.getDisplayName());
 		// Remove the core
 		if (Config.playerDeathDestroysCore)
 			removeCore(player.world, core.getPos());
@@ -196,7 +204,7 @@ public class SpiritUtil {
 			}
 			// Check death
 			if (deathTimer.isDead())
-					killPlayer(event.player);
+					killPlayer(event.player, false);
 		}
 		else {
 			if (deathTimer.shouldSendStopMessage())
@@ -209,11 +217,15 @@ public class SpiritUtil {
 	 * Kills a player as the spirit tree
 	 * @param player player to kill
 	 */
-	private static void killPlayer(EntityPlayer player) {
+	private static void killPlayer(EntityPlayer player, boolean coreKilled) {
 		if (player == null)
 			return;
-		if (canKillPlayerType(player))
-			player.attackEntityFrom(DAMAGE_TREE_SPIRIT, player.getMaxHealth());
+		if (canKillPlayerType(player)) {
+			if (Config.playerDeathDestroysCore || coreKilled)
+				player.attackEntityFrom(DAMAGE_TREE_SPIRIT, player.getMaxHealth());
+			else
+				player.attackEntityFrom(DAMAGE_TREE_SPIRIT_CORE_NOT_DESTROYED, player.getMaxHealth());
+		}
 		if (player instanceof EntityPlayerMP)
 			TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(), (EntityPlayerMP) player);
 		// Reset death timer
