@@ -1,15 +1,24 @@
 package com.rolandoislas.treespirit.data;
 
 import com.rolandoislas.treespirit.data.spirit.EnumPlayerType;
+import com.rolandoislas.treespirit.data.spirit.RootBlock;
 import com.rolandoislas.treespirit.gui.renderer.EnumDeathWarning;
+import com.rolandoislas.treespirit.registry.ModBlocks;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.rolandoislas.treespirit.TreeSpirit.MODID;
 
@@ -20,6 +29,8 @@ public class Config {
 	private static final String BASE_LANG = MODID + ".config.";
 	private static final String CATEGORY_DESTRUCTION = "destruction";
 	private static final String CATEGORY_ADVANCED = "advanced";
+    private static final String CATEGORY_RESTART = "restart";
+	private static final String[] defaultRootBlocks;
 	private static Configuration config;
 	public static int deathTime;
 	public static boolean randomTicksLog;
@@ -36,6 +47,17 @@ public class Config {
 	public static boolean enableSkyTreeWorld;
 	public static boolean growCropsAroundPlayer;
 	public static boolean giveSaplingOnSpawn;
+	private static String[] rootBlocksStrings;
+	public static List<RootBlock> rootBlocks;
+	public static int lifeExtenderMaxSeconds;
+
+	static {
+		defaultRootBlocks = new String[] {
+				ModBlocks.LOG.getRegistryName().toString(),
+				ModBlocks.CORE.getRegistryName().toString()
+		};
+		rootBlocks = new ArrayList<>();
+	}
 
 	public static void setConfigFile(File configFile) {
 		config = new Configuration(configFile);
@@ -45,8 +67,8 @@ public class Config {
 		config.load();
 		// General
 		config.setCategoryLanguageKey(Configuration.CATEGORY_GENERAL, BASE_LANG + "general");
-		deathTime = config.getInt("deathtime", Configuration.CATEGORY_GENERAL, 10, 1, 60,
-				"", BASE_LANG + "general.deathtime");
+		deathTime = config.getInt("deathtime", Configuration.CATEGORY_GENERAL, 10, 1,
+				Integer.MAX_VALUE / 40, "", BASE_LANG + "general.deathtime");
 		randomTicksLog = config.getBoolean("randomticklog", Configuration.CATEGORY_GENERAL, true,
 				"", BASE_LANG + "general.randomticklog");
 		oneDimensionCorePerWorld = config.getBoolean("onedimcoreperworld", Configuration.CATEGORY_GENERAL,
@@ -84,9 +106,49 @@ public class Config {
 				"", BASE_LANG + CATEGORY_ADVANCED + ".worldtypeskytree");
 		playerDeathDestroysCore = config.getBoolean("PlayerDeathDestroysCore", CATEGORY_ADVANCED, true,
 				"", BASE_LANG + CATEGORY_ADVANCED + ".player_death_destroys_core");
-		enableSkyTreeWorld = config.getBoolean("EnableWorldTypeSkyTree", CATEGORY_ADVANCED, false,
-				"", BASE_LANG + CATEGORY_ADVANCED + ".enable_world_type_sky_tree");
+		rootBlocksStrings = config.getStringList("root_blocks", CATEGORY_ADVANCED,
+				defaultRootBlocks,
+				"", new String[]{}, BASE_LANG + CATEGORY_ADVANCED + ".root_blocks");
+		generateRootBlocks();
+		// Restart Required
+        config.setCategoryLanguageKey(CATEGORY_RESTART, BASE_LANG + CATEGORY_RESTART);
+        config.setCategoryRequiresMcRestart(CATEGORY_RESTART, true);
+		enableSkyTreeWorld = config.getBoolean("EnableWorldTypeSkyTree", CATEGORY_RESTART, false,
+				"", BASE_LANG + CATEGORY_RESTART + ".enable_world_type_sky_tree");
+        lifeExtenderMaxSeconds = config.getInt("lifeExtenderMaxSeconds",
+                CATEGORY_RESTART, 60 * 5, 1, 65000 / 40,
+                "", BASE_LANG + CATEGORY_RESTART  + ".lifeExtenderMaxSeconds");
 		config.save();
+	}
+
+	/**
+	 * Generate a list of root blocks based on the strings provided
+	 */
+	private static void generateRootBlocks() {
+		Pattern blockPattern = Pattern.compile("(\\w+:\\w+)(?:\\s(\\d+)(?:\\s(\\d+))?)?");
+		rootBlocks.clear();
+		for (String rootBlockString : rootBlocksStrings) {
+			Matcher matcher = blockPattern.matcher(rootBlockString);
+			if (!matcher.matches())
+				continue;
+			String name = matcher.group(1);
+			Integer meta = null;
+			if (matcher.groupCount() > 2) {
+			    String metaString = matcher.group(2);
+			    try {
+			        meta = Integer.parseInt(metaString);
+                }
+                catch (NumberFormatException ignore) {}
+            }
+            // Attempt to create the block
+			Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
+			if (block == null || block.equals(Blocks.AIR))
+				continue;
+			RootBlock rootBlock = new RootBlock(block);
+			if (meta != null)
+				rootBlock.setMeta(meta);
+			rootBlocks.add(rootBlock);
+		}
 	}
 
 	public static void configChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
@@ -107,6 +169,7 @@ public class Config {
 		categories.add(new ConfigElement(getConfig().getCategory(Configuration.CATEGORY_CLIENT)));
 		categories.add(new ConfigElement(getConfig().getCategory(CATEGORY_DESTRUCTION)));
 		categories.add(new ConfigElement(getConfig().getCategory(CATEGORY_ADVANCED)));
+		categories.add(new ConfigElement(getConfig().getCategory(CATEGORY_RESTART)));
 		return categories;
 	}
 }

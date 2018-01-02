@@ -1,7 +1,9 @@
 package com.rolandoislas.treespirit.block;
 
 import com.rolandoislas.treespirit.TreeSpirit;
+import com.rolandoislas.treespirit.data.Config;
 import com.rolandoislas.treespirit.data.Messages;
+import com.rolandoislas.treespirit.data.spirit.RootBlock;
 import com.rolandoislas.treespirit.registry.ModBlocks;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
 import com.rolandoislas.treespirit.util.SpiritUtil;
@@ -168,6 +170,9 @@ public class BlockRoomSealer extends BlockBush {
 	}
 
 	private boolean isCompatibleBlock(Block block) {
+		for (RootBlock rootBlock : Config.rootBlocks)
+			if (Block.isEqualTo(block, rootBlock.getBlock()))
+				return true;
 		return block == ModBlocks.DOOR || block == ModBlocks.LOG;
 	}
 
@@ -191,7 +196,7 @@ public class BlockRoomSealer extends BlockBush {
 
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
-		return worldIn.getBlockState(pos.down()).getBlock() == ModBlocks.LOG;
+		return isCompatibleBlock(worldIn.getBlockState(pos.down()).getBlock());
 	}
 
 	@Override

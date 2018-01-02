@@ -2,6 +2,7 @@ package com.rolandoislas.treespirit.block;
 
 import com.rolandoislas.treespirit.TreeSpirit;
 import com.rolandoislas.treespirit.data.Config;
+import com.rolandoislas.treespirit.data.spirit.RootBlock;
 import com.rolandoislas.treespirit.registry.ModBlocks;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
 import com.rolandoislas.treespirit.util.WorldUtil;
@@ -48,10 +49,13 @@ public class BlockSpiritLog extends BlockRotatedPillar {
 	private boolean checkDestroy(World world, BlockPos pos, IBlockState state, boolean dropBlock) {
 		if (world.isRemote)
 			return false;
+		Block[] rootBlocks = new Block[Config.rootBlocks.size()];
+		for (RootBlock rootBlock : Config.rootBlocks)
+			rootBlocks[Config.rootBlocks.indexOf(rootBlock)] = rootBlock.getBlock();
 		if (
 				// Can block be sustained by radius of core
 				!WorldUtil.hasBlockNearby(pos, world, 1, 1, 1,
-						Integer.MAX_VALUE, ModBlocks.CORE) &&
+						Integer.MAX_VALUE, rootBlocks, ModBlocks.CORE) &&
 				// Can tree be sustained by core or grass
 				!WorldUtil.hasBlockNearby(pos, world, 0, 10, 0, 0,
 						ModBlocks.CORE, ModBlocks.GRASS)
