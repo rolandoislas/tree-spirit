@@ -10,6 +10,7 @@ import com.rolandoislas.treespirit.entity.ai.EntityAIMoveToCore;
 import com.rolandoislas.treespirit.network.MessageCoreCountdown;
 import com.rolandoislas.treespirit.registry.ModBlocks;
 import com.rolandoislas.treespirit.registry.ModItems;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -269,10 +270,13 @@ public class SpiritUtil {
 	 */
 	private static boolean isInRangeOfCore(EntityPlayer player, SpiritCore core) {
 		int radius = core.getLevel() + 1;
+		Block[] rootBlocks = new Block[Config.rootBlocks.size()];
+		for (RootBlock rootBlock : Config.rootBlocks)
+			rootBlocks[Config.rootBlocks.indexOf(rootBlock)] = rootBlock.getBlock();
 		return WorldUtil.hasBlocksNearbyViaChain(player.getPosition(), player.world, radius, radius, radius,
-				Integer.MAX_VALUE, ModBlocks.LOG, ModBlocks.CORE) ||
+				Integer.MAX_VALUE, rootBlocks, ModBlocks.CORE) ||
 				WorldUtil.hasBlocksNearbyViaChain(player.getPosition().up(), player.world, radius, radius, radius,
-						Integer.MAX_VALUE, ModBlocks.LOG, ModBlocks.CORE);
+						Integer.MAX_VALUE, rootBlocks, ModBlocks.CORE);
 	}
 
 	/**

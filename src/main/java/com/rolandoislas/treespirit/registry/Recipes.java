@@ -1,7 +1,10 @@
 package com.rolandoislas.treespirit.registry;
 
 import com.rolandoislas.treespirit.block.EnumWood;
+import com.rolandoislas.treespirit.data.Config;
+import com.rolandoislas.treespirit.item.ItemLifeExtender;
 import com.rolandoislas.treespirit.item.crafting.AddDurabilityRecipe;
+import com.rolandoislas.treespirit.item.crafting.LifeExtenderRecipe;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -37,10 +40,7 @@ public class Recipes {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ModItems.GRASS, Blocks.GRASS, "treeSpiritEssence"));
 		// Life Extender
 		GameRegistry.addRecipe(new AddDurabilityRecipe(ModItems.LIFE_EXTENDER, ModItems.ESSENCE, .1f));
-		ItemStack lifeExtender = new ItemStack(ModItems.LIFE_EXTENDER);
-		lifeExtender.setItemDamage(lifeExtender.getMaxDamage());
-		GameRegistry.addRecipe(new ShapelessOreRecipe(lifeExtender, ModItems.ESSENCE, Items.PAPER,
-				new ItemStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage())));
+		GameRegistry.addRecipe(new LifeExtenderRecipe(true));
 		// Room Sealer
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ModItems.ROOM_SEALER, Blocks.BROWN_MUSHROOM,
 				ModItems.ESSENCE));

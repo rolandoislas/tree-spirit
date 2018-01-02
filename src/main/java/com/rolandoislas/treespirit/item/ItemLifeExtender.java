@@ -1,6 +1,7 @@
 package com.rolandoislas.treespirit.item;
 
 import com.rolandoislas.treespirit.TreeSpirit;
+import com.rolandoislas.treespirit.data.Config;
 import com.rolandoislas.treespirit.registry.ModCreativeTabs;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,15 +14,13 @@ import java.util.List;
  * Created by Rolando on 3/3/2017.
  */
 public class ItemLifeExtender extends Item {
-	private static final int MAX_SECONDS = 60 * 5;
-	private static final int TICKS_PER_SECOND = 40; // 40 because of forge player event
+	public static final int TICKS_PER_SECOND = 40; // 40 because of forge player event
 
 	public ItemLifeExtender() {
 		this.setUnlocalizedName(TreeSpirit.MODID + ".life_extender");
 		this.setRegistryName(TreeSpirit.MODID, "life_extender");
 		this.setCreativeTab(ModCreativeTabs.MAIN);
-
-		this.setMaxDamage(TICKS_PER_SECOND * MAX_SECONDS);
+		this.setMaxDamage(TICKS_PER_SECOND * Config.lifeExtenderMaxSeconds);
 		this.setMaxStackSize(1);
 	}
 
