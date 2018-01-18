@@ -37,8 +37,15 @@ treespirit.config.advanced.worldtypeskytree=Default Generator Sky Tree
 treespirit.config.advanced.worldtypeskytree.tooltip=Set's the default generator to Sky Tree on the world create screen
 treespirit.config.advanced.player_death_destroys_core=Player Death Destroys Core
 treespirit.config.advanced.player_death_destroys_core.tooltip=Should a player death destroy their core
-treespirit.config.advanced.enable_world_type_sky_tree=Enable Sky Tree World Type
-treespirit.config.advanced.enable_world_type_sky_tree.tooltip=Enables the sky tree world type as a generator option
+treespirit.config.advanced.root_blocks=Root Blocks
+treespirit.config.advanced.root_blocks.tooltip=Sets the blocks that should be considered tree root blocks
+
+treespirit.config.restart=Restart
+treespirit.config.advanced.tooltip=Advanced user settings that require a restart to update
+treespirit.config.restart.enable_world_type_sky_tree=Enable Sky Tree World Type
+treespirit.config.restart.enable_world_type_sky_tree.tooltip=Enables the sky tree world type as a generator option
+treespirit.config.restart.lifeExtenderMaxSeconds=Life Extender Time
+treespirit.config.restart.lifeExtenderMaxSeconds.tooltip=Max seconds the life extender can store
 
 itemGroup.treespirit=Tree Spirit
 

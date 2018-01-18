@@ -8,6 +8,7 @@ import com.rolandoislas.treespirit.registry.*;
 import com.rolandoislas.treespirit.util.JsonUtil;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -37,6 +38,7 @@ public class CommonProxy {
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {
-
+		Config.configChanged(new ConfigChangedEvent.OnConfigChangedEvent(TreeSpirit.MODID, null,
+				false, false));
 	}
 }
