@@ -62,4 +62,9 @@ public class EventHandlerCommon {
 	public void worldSaveEvent(WorldEvent.Save event) {
 		SpiritUtil.worldSaveEvent(event);
 	}
+
+	@SubscribeEvent(priority = EventPriority.NORMAL)
+	public void blockBreakEvent(BlockEvent.BreakEvent event) {
+		SpiritUtil.blockBreakEvent(event);
+	}
 }

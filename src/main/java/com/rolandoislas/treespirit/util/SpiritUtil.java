@@ -10,6 +10,7 @@ import com.rolandoislas.treespirit.entity.ai.EntityAIMoveToCore;
 import com.rolandoislas.treespirit.network.MessageCoreCountdown;
 import com.rolandoislas.treespirit.registry.ModBlocks;
 import com.rolandoislas.treespirit.registry.ModItems;
+import com.rolandoislas.treespirit.registry.Potions;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
@@ -21,7 +22,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -202,6 +206,13 @@ public class SpiritUtil {
 				deathTimer.shouldSendStartMessage(); // Ignore
 				TreeSpirit.networkChannel.sendTo(new MessageCoreCountdown(Config.deathTime, deathTimer.getTime()),
 						(EntityPlayerMP) event.player);
+				// Fatigue Player
+				Potion fatigue = Potion.REGISTRY.getObject(new ResourceLocation("mining_fatigue"));
+				if (fatigue != null)
+					event.player.addPotionEffect(new PotionEffect(fatigue, 20, 255));
+				else
+					TreeSpirit.logger.warn("Failed to find the mining_fatigue potion");
+				event.player.addPotionEffect(new PotionEffect(Potions.FADING_LIGHT, 20, 0));
 			}
 			// Check death
 			if (deathTimer.isDead())
@@ -571,5 +582,14 @@ public class SpiritUtil {
 		core.setLevel(core.getLevel() - 1);
 		JsonUtil.setSpiritData(spiritData);
 		return core.getLevel();
+	}
+
+	/**
+	 * Cancel block break if the player has the fading light potion effect
+	 * @param event block break
+	 */
+	public static void blockBreakEvent(BlockEvent.BreakEvent event) {
+		if (event.getPlayer() != null && event.getPlayer().isPotionActive(Potions.FADING_LIGHT))
+			event.setCanceled(true);
 	}
 }

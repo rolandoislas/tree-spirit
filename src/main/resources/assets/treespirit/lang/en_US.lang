@@ -92,3 +92,5 @@ death.attack.treespirit.tree_spirit=%s's tree has died.
 death.attack.treespirit.tree_spirit_core_not_destroyed=%s was killed for neglecting their tree.
 
 generator.treespirit.sky=Sky Tree
+
+effect.treespirit.fading_light=Fading Light

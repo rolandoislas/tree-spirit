@@ -26,6 +26,7 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
 		ModBlocks.register();
 		ModItems.register();
+		Potions.register();
 	}
 
 	public void init(FMLInitializationEvent event) {
