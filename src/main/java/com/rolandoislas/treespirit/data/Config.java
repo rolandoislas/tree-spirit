@@ -54,7 +54,8 @@ public class Config {
 	static {
 		defaultRootBlocks = new String[] {
 				ModBlocks.LOG.getRegistryName().toString(),
-				ModBlocks.CORE.getRegistryName().toString()
+				ModBlocks.CORE.getRegistryName().toString(),
+				ModBlocks.LEAF.getRegistryName().toString()
 		};
 		rootBlocks = new ArrayList<>();
 	}
