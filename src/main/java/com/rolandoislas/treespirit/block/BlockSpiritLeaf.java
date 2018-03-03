@@ -61,8 +61,8 @@ public class BlockSpiritLeaf extends Block implements IShearable {
 	@Override
 	public List<ItemStack> onSheared(@Nonnull ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-		items.add(item);
-		return new ArrayList<ItemStack>();
+		items.add(new ItemStack(ModBlocks.LEAF, 1, 0));
+		return items;
 	}
 
 	@Override
